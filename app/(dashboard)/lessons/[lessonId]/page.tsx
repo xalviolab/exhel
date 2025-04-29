@@ -1,11 +1,12 @@
 import { getUserDetails, requireAuth } from "@/lib/auth"
-import { getLessonDetails } from "@/lib/db"
+import { getLessonDetails, getUserProgress } from "@/lib/db"
 import { DashboardLayout } from "@/components/dashboard-layout"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import Link from "next/link"
-import { ArrowRight, ArrowLeft, Heart, FileText, LinkIcon, Video } from "lucide-react"
-import { notFound } from "next/navigation"
+import { ArrowRight, ArrowLeft, Heart, FileText, LinkIcon, Video, AlertTriangle } from "lucide-react"
+import { notFound, redirect } from "next/navigation"
 
 interface LessonPageProps {
   params: {
@@ -25,6 +26,80 @@ export default async function LessonPage({ params }: LessonPageProps) {
 
   if (!lesson) {
     notFound()
+  }
+
+  // Kullanıcının ilerleme durumunu kontrol et
+  const userProgress = await getUserProgress(user.id)
+
+  // Dersin kilitli olup olmadığını kontrol et
+  const moduleId = lesson.module_id
+  const moduleLessons = await getLessonDetails(moduleId).then(mod => mod?.lessons || [])
+
+  // Dersleri sırala
+  const sortedLessons = [...moduleLessons].sort((a, b) => a.order_index - b.order_index)
+
+  // Dersin modüldeki indeksini bul
+  const lessonIndex = sortedLessons.findIndex(l => l.id === params.lessonId)
+
+  // İlk ders değilse ve önceki ders tamamlanmamışsa kilitlidir
+  let isLocked = false
+  if (lessonIndex > 0) {
+    const previousLesson = sortedLessons[lessonIndex - 1]
+    const previousLessonCompleted = userProgress.some(p => p.lesson_id === previousLesson.id && p.completed)
+    isLocked = !previousLessonCompleted
+  }
+
+  // Kalp sayısı 0 ise ve ders daha önce tamamlanmamışsa erişimi engelle
+  const lessonCompleted = userProgress.some(p => p.lesson_id === params.lessonId && p.completed)
+  if (user.hearts <= 0 && !lessonCompleted) {
+    isLocked = true
+  }
+
+  // Ders kilitliyse ve tamamlanmamışsa uyarı göster
+  if (isLocked && !lessonCompleted) {
+    return (
+      <DashboardLayout>
+        <div className="space-y-6">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
+                <Link href={`/modules/${lesson.module_id}`} className="hover:text-primary transition-colors">
+                  {lesson.modules.title}
+                </Link>
+                <span>/</span>
+                <span>{lesson.title}</span>
+              </div>
+              <h1 className="text-3xl font-bold tracking-tight">{lesson.title}</h1>
+              <p className="text-muted-foreground">{lesson.description || "Bu ders hakkında açıklama bulunmuyor."}</p>
+            </div>
+            <Button asChild variant="outline">
+              <Link href={`/modules/${lesson.module_id}`}>
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Modüle Dön
+              </Link>
+            </Button>
+          </div>
+
+          <Alert variant="destructive">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>Erişim Engellendi</AlertTitle>
+            <AlertDescription>
+              {user.hearts <= 0
+                ? "Kalbiniz (canınız) kalmadığı için yeni derslere erişemezsiniz. Tamamlanmış dersleri tekrar edebilirsiniz."
+                : "Bu derse erişebilmek için lütfen önceki dersleri başarı ile tamamladığınızdan emin olun."}
+            </AlertDescription>
+          </Alert>
+
+          <div className="flex justify-center mt-4">
+            <Button asChild variant="outline">
+              <Link href={`/modules/${lesson.module_id}`}>
+                Modüle Geri Dön
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </DashboardLayout>
+    )
   }
 
   // Ders bölümlerini getir
