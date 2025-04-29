@@ -15,7 +15,7 @@ import { useToast } from "@/components/ui/use-toast"
 import { createClient } from "@/lib/supabase/client"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
-
+ 
 interface ModuleEditPageProps {
   params: {
     moduleId: string
