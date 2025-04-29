@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import { Plus, Pencil, BookOpen } from "lucide-react"
 import { ModuleForm } from "@/components/admin/module-form"
+import { cn, isLightColor } from "@/lib/utils"
 
 export default async function AdminModulesPage() {
   await requireAdmin()
