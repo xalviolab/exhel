@@ -69,12 +69,12 @@ export default async function BadgesPage() {
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
                   {badgesByType[type].map((badge: any) => (
                     <div key={badge.id} className="flex flex-col items-center text-center">
-                      <div className="flex h-20 w-20 items-center justify-center rounded-full bg-muted mb-3">
+                      <div className="flex h-20 w-20 items-center justify-center bg-muted mb-3">
                         {badge.badges.image_url ? (
                           <img
                             src={badge.badges.image_url || "/placeholder.svg"}
                             alt={badge.badges.name}
-                            className="h-16 w-16 rounded-full"
+                            className="max-h-20 max-w-20 object-contain"
                           />
                         ) : (
                           <Award className="h-10 w-10 text-primary" />
