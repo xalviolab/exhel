@@ -55,7 +55,6 @@ export function ModuleForm({ moduleId, defaultValues }: ModuleFormProps = {}) {
   const [requiredLevel, setRequiredLevel] = useState(defaultValues?.required_level || 1)
   const [isPremium, setIsPremium] = useState(defaultValues?.is_premium || false)
   const [classLevel, setClassLevel] = useState(defaultValues?.class_level || "all")
-  const [color, setColor] = useState(defaultValues?.color || "#4f46e5")
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -71,8 +70,7 @@ export function ModuleForm({ moduleId, defaultValues }: ModuleFormProps = {}) {
         order_index: orderIndex,
         required_level: requiredLevel,
         is_premium: isPremium,
-        class_level: classLevel,
-        color: color,
+        class_level: classLevel
       }
 
       if (moduleId) {
@@ -214,42 +212,7 @@ export function ModuleForm({ moduleId, defaultValues }: ModuleFormProps = {}) {
               </Select>
             </div>
 
-            <div className="grid gap-2">
-              <Label htmlFor="color">Modül Rengi</Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    id="color"
-                    variant="outline"
-                    className={cn("w-full justify-start text-left font-normal", !color && "text-muted-foreground")}
-                    style={{ backgroundColor: color, color: isLightColor(color) ? "#000" : "#fff" }}
-                  >
-                    <div className="w-4 h-4 rounded-full mr-2" style={{ backgroundColor: color }}></div>
-                    <span>{color}</span>
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-full p-3">
-                  <div className="grid gap-2">
-                    <div className="grid grid-cols-5 gap-2">
-                      {["#4f46e5", "#0ea5e9", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899", "#f97316", "#14b8a6", "#64748b"].map((c) => (
-                        <div
-                          key={c}
-                          className={cn("w-8 h-8 rounded-full cursor-pointer border-2", color === c ? "border-black dark:border-white" : "border-transparent")}
-                          style={{ backgroundColor: c }}
-                          onClick={() => setColor(c)}
-                        />
-                      ))}
-                    </div>
-                    <Input
-                      type="color"
-                      value={color}
-                      onChange={(e) => setColor(e.target.value)}
-                      className="w-full h-8"
-                    />
-                  </div>
-                </PopoverContent>
-              </Popover>
-            </div>
+
 
             <div className="flex items-center gap-2">
               <Switch id="is_premium" checked={isPremium} onCheckedChange={setIsPremium} />
