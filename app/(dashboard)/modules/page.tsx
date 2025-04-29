@@ -1,3 +1,6 @@
+// Sayfayı dinamik olarak işaretle
+export const dynamic = 'force-dynamic'
+
 import { getUserDetails, requireAuth } from "@/lib/auth"
 import { getAccessibleModules } from "@/lib/db"
 import { DashboardLayout } from "@/components/dashboard-layout"
