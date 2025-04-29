@@ -1,418 +1,228 @@
-"use client"
+import { getUserDetails, requireAuth } from "@/lib/auth"
 
-import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
-import { createClient } from "@/lib/supabase/client"
+// Sayfayı dinamik olarak işaretle
+export const dynamic = 'force-dynamic'
+
+import { getLessonDetails, getUserProgress } from "@/lib/db"
 import { DashboardLayout } from "@/components/dashboard-layout"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Progress } from "@/components/ui/progress"
-import { Heart, AlertCircle, CheckCircle, XCircle, ArrowRight, Trophy } from "lucide-react"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { cn } from "@/lib/utils"
-import { motion, AnimatePresence } from "framer-motion"
+import { Card, CardContent } from "@/components/ui/card"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import Link from "next/link"
+import { ArrowRight, ArrowLeft, Heart, FileText, LinkIcon, Video, AlertTriangle } from "lucide-react"
+import { notFound, redirect } from "next/navigation"
 
-interface QuizPageProps {
+interface LessonPageProps {
   params: {
     lessonId: string
   }
 }
 
-export default function QuizPage({ params }: QuizPageProps) {
-  const router = useRouter()
-  const [questions, setQuestions] = useState<any[]>([])
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
-  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null)
-  const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false)
-  const [isCorrect, setIsCorrect] = useState(false)
-  const [score, setScore] = useState(0)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [user, setUser] = useState<any>(null)
-  const [hearts, setHearts] = useState(5)
-  const [quizCompleted, setQuizCompleted] = useState(false)
-  const [totalXp, setTotalXp] = useState(0)
-  const [showFeedback, setShowFeedback] = useState(false)
-  const [earnedBadge, setEarnedBadge] = useState<any>(null)
+export default async function LessonPage({ params }: LessonPageProps) {
+  const session = await requireAuth()
+  const user = await getUserDetails()
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const supabase = createClient()
-
-        // Kullanıcı bilgilerini al
-        const {
-          data: { session },
-        } = await supabase.auth.getSession()
-
-        if (!session) {
-          router.push("/login")
-          return
-        }
-
-        const { data: userData, error: userError } = await supabase
-          .from("users")
-          .select("*")
-          .eq("id", session.user.id)
-          .single()
-
-        if (userError) {
-          throw userError
-        }
-
-        setUser(userData)
-        setHearts(userData.hearts)
-
-        // Soruları al
-        const { data: questionsData, error: questionsError } = await supabase
-          .from("questions")
-          .select(`
-            *,
-            answers (*)
-          `)
-          .eq("lesson_id", params.lessonId)
-          .order("order_index")
-
-        if (questionsError) {
-          throw questionsError
-        }
-
-        setQuestions(questionsData || [])
-      } catch (error: any) {
-        setError(error.message || "Bir hata oluştu.")
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchData()
-  }, [params.lessonId, router])
-
-  const currentQuestion = questions[currentQuestionIndex]
-
-  const handleAnswerSelect = (answerId: string) => {
-    if (isAnswerSubmitted) return
-    setSelectedAnswer(answerId)
+  if (!user) {
+    return <div>Kullanıcı bilgileri yüklenemedi.</div>
   }
 
-  const handleSubmitAnswer = async () => {
-    if (!selectedAnswer || !currentQuestion || !user) return
+  const lesson = await getLessonDetails(params.lessonId)
 
-    const selectedAnswerObj = currentQuestion.answers.find((a: any) => a.id === selectedAnswer)
-    const isAnswerCorrect = selectedAnswerObj?.is_correct || false
-
-    setIsAnswerSubmitted(true)
-    setIsCorrect(isAnswerCorrect)
-    setShowFeedback(true)
-
-    if (isAnswerCorrect) {
-      setScore(score + currentQuestion.xp_value)
-      setTotalXp(totalXp + currentQuestion.xp_value)
-    } else {
-      // Yanlış cevap verdiğinde kalp azalt (0'dan aşağı düşmemeli)
-      const newHearts = Math.max(0, hearts - 1)
-      setHearts(newHearts)
-
-      // Kalpleri güncelle
-      const supabase = createClient()
-      await supabase.from("users").update({ hearts: newHearts }).eq("id", user.id)
-
-      // Kalp kalmadıysa dersi tekrar etmesi gerekiyor
-      if (newHearts <= 0) {
-        setTimeout(() => {
-          router.push(`/modules/${currentQuestion.lesson_id}`)
-        }, 2000)
-        return
-      }
-    }
+  if (!lesson) {
+    notFound()
   }
 
-  const handleNextQuestion = () => {
-    setSelectedAnswer(null)
-    setIsAnswerSubmitted(false)
-    setShowFeedback(false)
+  // Kullanıcının ilerleme durumunu kontrol et
+  const userProgress = await getUserProgress(user.id)
 
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1)
-    } else {
-      completeQuiz()
-    }
+  // Dersin kilitli olup olmadığını kontrol et
+  const moduleId = lesson.module_id
+  const moduleLessons = await getLessonDetails(moduleId).then(mod => mod?.lessons || [])
+
+  // Dersleri sırala
+  const sortedLessons = [...moduleLessons].sort((a, b) => a.order_index - b.order_index)
+
+  // Dersin modüldeki indeksini bul
+  const lessonIndex = sortedLessons.findIndex(l => l.id === params.lessonId)
+
+  // İlk ders değilse ve önceki ders tamamlanmamışsa kilitlidir
+  let isLocked = false
+  if (lessonIndex > 0) {
+    const previousLesson = sortedLessons[lessonIndex - 1]
+    const previousLessonCompleted = userProgress.some(p => p.lesson_id === previousLesson.id && p.completed)
+    isLocked = !previousLessonCompleted
   }
 
-  const completeQuiz = async () => {
-    if (!user) return
-
-    setQuizCompleted(true)
-
-    try {
-      const supabase = createClient()
-
-      // Dersi tamamla
-      await supabase.from("user_progress").upsert({
-        user_id: user.id,
-        lesson_id: params.lessonId,
-        completed: true,
-        score: score,
-        completed_at: new Date().toISOString(),
-      })
-
-      // XP ekle
-      await supabase
-        .from("users")
-        .update({
-          xp: user.xp + totalXp,
-        })
-        .eq("id", user.id)
-
-      // Ders tamamlandığında rozet kontrolü
-      const { data: lessonData } = await supabase
-        .from('lessons')
-        .select('badge_id')
-        .eq('id', params.lessonId)
-        .single()
-
-      if (lessonData?.badge_id) {
-        // Kullanıcının bu rozeti daha önce kazanıp kazanmadığını kontrol et
-        const { data: existingBadge } = await supabase
-          .from('user_badges')
-          .select('id')
-          .eq('user_id', user.id)
-          .eq('badge_id', lessonData.badge_id)
-          .single()
-
-        if (!existingBadge) {
-          // Kullanıcıya rozeti ver
-          await supabase.from('user_badges').insert({
-            user_id: user.id,
-            badge_id: lessonData.badge_id,
-            earned_at: new Date().toISOString()
-          })
-
-          // Rozet bilgilerini al ve state'e kaydet
-          const { data: badgeData } = await supabase
-            .from('badges')
-            .select('*')
-            .eq('id', lessonData.badge_id)
-            .single()
-
-          if (badgeData) {
-            setEarnedBadge(badgeData)
-          }
-        }
-      }
-    } catch (error) {
-      console.error("Quiz tamamlanırken hata oluştu:", error)
-    }
+  // Kalp sayısı 0 ise ve ders daha önce tamamlanmamışsa erişimi engelle
+  const lessonCompleted = userProgress.some(p => p.lesson_id === params.lessonId && p.completed)
+  if (user.hearts <= 0 && !lessonCompleted) {
+    isLocked = true
   }
 
-  if (loading) {
+  // Ders kilitliyse ve tamamlanmamışsa uyarı göster
+  if (isLocked && !lessonCompleted) {
     return (
       <DashboardLayout>
-        <div className="flex items-center justify-center h-[60vh]">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-            <p className="mt-4 text-muted-foreground">Yükleniyor...</p>
+        <div className="space-y-6">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
+                <Link href={`/modules/${lesson.module_id}`} className="hover:text-primary transition-colors">
+                  {lesson.modules.title}
+                </Link>
+                <span>/</span>
+                <span>{lesson.title}</span>
+              </div>
+              <h1 className="text-3xl font-bold tracking-tight">{lesson.title}</h1>
+              <p className="text-muted-foreground">{lesson.description || "Bu ders hakkında açıklama bulunmuyor."}</p>
+            </div>
+            <Button asChild variant="outline">
+              <Link href={`/modules/${lesson.module_id}`}>
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Modüle Dön
+              </Link>
+            </Button>
+          </div>
+
+          <Alert variant="destructive">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>Erişim Engellendi</AlertTitle>
+            <AlertDescription>
+              {user.hearts <= 0
+                ? "Kalbiniz (canınız) kalmadığı için yeni derslere erişemezsiniz. Tamamlanmış dersleri tekrar edebilirsiniz."
+                : "Bu derse erişebilmek için lütfen önceki dersleri başarı ile tamamladığınızdan emin olun."}
+            </AlertDescription>
+          </Alert>
+
+          <div className="flex justify-center mt-4">
+            <Button asChild variant="outline">
+              <Link href={`/modules/${lesson.module_id}`}>
+                Modüle Geri Dön
+              </Link>
+            </Button>
           </div>
         </div>
       </DashboardLayout>
     )
   }
 
-  if (error) {
-    return (
-      <DashboardLayout>
-        <Alert variant="destructive" className="mb-4">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-        <Button onClick={() => router.back()}>Geri Dön</Button>
-      </DashboardLayout>
-    )
-  }
+  // Ders bölümlerini getir
+  const supabase = await import("@/lib/supabase/server").then((mod) => mod.createServerClient())
+  const { data: sections } = await supabase
+    .from("lesson_sections")
+    .select("*")
+    .eq("lesson_id", params.lessonId)
+    .order("order_index")
 
-  if (questions.length === 0) {
-    return (
-      <DashboardLayout>
-        <div className="text-center">
-          <AlertCircle className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-          <h2 className="text-2xl font-bold mb-2">Bu ders için soru bulunamadı</h2>
-          <p className="text-muted-foreground mb-6">Bu ders için henüz soru eklenmemiş.</p>
-          <Button onClick={() => router.back()}>Geri Dön</Button>
-        </div>
-      </DashboardLayout>
-    )
-  }
+  // Ders kaynaklarını getir
+  const { data: resources } = await supabase.from("lesson_resources").select("*").eq("lesson_id", params.lessonId)
 
-  if (quizCompleted) {
-    return (
-      <DashboardLayout>
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Card className="max-w-2xl mx-auto overflow-hidden border-2">
-            <div className="bg-primary/10 p-6 flex justify-center">
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.3, type: "spring", stiffness: 200, damping: 15 }}
-              >
-                <div className="bg-primary/20 rounded-full p-6">
-                  <Trophy className="h-16 w-16 text-primary" />
-                </div>
-              </motion.div>
-            </div>
-            <CardHeader>
-              <CardTitle className="text-center text-2xl">Quiz Tamamlandı!</CardTitle>
-            </CardHeader>
-            <CardContent className="text-center">
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-                <h3 className="text-xl font-bold mb-2">Tebrikler!</h3>
-                <p className="text-muted-foreground mb-6">Bu dersi başarıyla tamamladınız.</p>
-                <div className="flex justify-center items-center gap-8 mb-6">
-                  <div className="text-center">
-                    <div className="text-4xl font-bold text-primary mb-1">{totalXp}</div>
-                    <p className="text-sm text-muted-foreground">Kazanılan XP</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-4xl font-bold text-primary mb-1">
-                      {Math.round((score / questions.reduce((acc, q) => acc + q.xp_value, 0)) * 100)}%
-                    </div>
-                    <p className="text-sm text-muted-foreground">Doğruluk</p>
-                  </div>
-                </div>
-
-                {earnedBadge && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.8, type: "spring", stiffness: 200, damping: 15 }}
-                    className="mt-6 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-6 max-w-md mx-auto"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-800/50">
-                        {earnedBadge.image_url ? (
-                          <img src={earnedBadge.image_url} alt={earnedBadge.name} className="h-12 w-12" />
-                        ) : (
-                          <Trophy className="h-8 w-8 text-amber-600 dark:text-amber-400" />
-                        )}
-                      </div>
-                      <div className="text-left">
-                        <h3 className="text-lg font-bold text-amber-800 dark:text-amber-300">Yeni Rozet Kazandınız!</h3>
-                        <p className="text-amber-700 dark:text-amber-400 font-medium">{earnedBadge.name}</p>
-                        {earnedBadge.description && (
-                          <p className="text-sm text-amber-600 dark:text-amber-500 mt-1">{earnedBadge.description}</p>
-                        )}
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-              </motion.div>
-            </CardContent>
-            <CardFooter className="flex justify-center gap-4">
-              <Button variant="outline" onClick={() => router.push(`/modules/${currentQuestion?.modules?.id}`)}>
-                Modüle Dön
-              </Button>
-              <Button onClick={() => router.push("/dashboard")}>Ana Sayfaya Dön</Button>
-            </CardFooter>
-          </Card>
-        </motion.div>
-      </DashboardLayout>
-    )
+  const getResourceIcon = (resourceType: string) => {
+    switch (resourceType) {
+      case "link":
+        return <LinkIcon className="h-4 w-4" />
+      case "file":
+        return <FileText className="h-4 w-4" />
+      case "video":
+        return <Video className="h-4 w-4" />
+      default:
+        return <LinkIcon className="h-4 w-4" />
+    }
   }
 
   return (
     <DashboardLayout>
-      <div className="max-w-3xl mx-auto">
-        <div className="flex justify-between items-center mb-6">
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 px-3 py-1.5 rounded-full">
-              <Heart className="h-5 w-5" />
-              <span className="font-medium">{hearts}</span>
+      <div className="space-y-6">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
+              <Link href={`/modules/${lesson.module_id}`} className="hover:text-primary transition-colors">
+                {lesson.modules.title}
+              </Link>
+              <span>/</span>
+              <span>{lesson.title}</span>
             </div>
+            <h1 className="text-3xl font-bold tracking-tight">{lesson.title}</h1>
+            <p className="text-muted-foreground">{lesson.description || "Bu ders hakkında açıklama bulunmuyor."}</p>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">
-              Soru {currentQuestionIndex + 1}/{questions.length}
-            </span>
+            <Button asChild variant="outline">
+              <Link href={`/modules/${lesson.module_id}`}>
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Modüle Dön
+              </Link>
+            </Button>
+            <div className="flex items-center gap-1 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 px-3 py-1.5 rounded-full">
+              <Heart className="h-5 w-5" />
+              <span className="font-medium">
+                {user.hearts}/{user.max_hearts}
+              </span>
+            </div>
           </div>
         </div>
 
-        <Progress value={(currentQuestionIndex / questions.length) * 100} className="h-2 mb-8" />
+        <Card className="overflow-hidden border-2 transition-all hover:shadow-md">
+          <CardContent className="p-6">
+            <div className="prose dark:prose-invert max-w-none">
+              {lesson.content ? (
+                <div dangerouslySetInnerHTML={{ __html: lesson.content }} />
+              ) : (
+                <p className="text-muted-foreground italic">Bu ders için henüz içerik eklenmemiş.</p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
 
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentQuestionIndex}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Card className="overflow-hidden border-2">
-              <CardHeader className="bg-primary/5">
-                <CardTitle>{currentQuestion?.question_text}</CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                <div className="space-y-3">
-                  {currentQuestion?.answers.map((answer: any) => (
-                    <div
-                      key={answer.id}
-                      className={cn(
-                        "p-4 border rounded-md cursor-pointer transition-all",
-                        selectedAnswer === answer.id
-                          ? isAnswerSubmitted
-                            ? answer.is_correct
-                              ? "bg-green-100 border-green-500 dark:bg-green-900/30 dark:border-green-500"
-                              : "bg-red-100 border-red-500 dark:bg-red-900/30 dark:border-red-500"
-                            : "bg-primary/10 border-primary"
-                          : isAnswerSubmitted && answer.is_correct
-                            ? "bg-green-100 border-green-500 dark:bg-green-900/30 dark:border-green-500"
-                            : "hover:bg-accent",
-                        !isAnswerSubmitted && "hover:-translate-y-0.5 hover:shadow-md",
-                      )}
-                      onClick={() => handleAnswerSelect(answer.id)}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span>{answer.answer_text}</span>
-                        {isAnswerSubmitted &&
-                          (answer.is_correct ? (
-                            <CheckCircle className="h-5 w-5 text-green-500" />
-                          ) : selectedAnswer === answer.id ? (
-                            <XCircle className="h-5 w-5 text-red-500" />
-                          ) : null)}
-                      </div>
+        {sections && sections.length > 0 && (
+          <div className="space-y-4">
+            <h2 className="text-2xl font-bold">Ders Bölümleri</h2>
+            {sections.map((section) => (
+              <Card key={section.id} className="overflow-hidden border-2 transition-all hover:shadow-md">
+                <CardContent className="p-6">
+                  <h3 className="text-xl font-bold mb-4">{section.title}</h3>
+                  <div className="prose dark:prose-invert max-w-none">
+                    <div dangerouslySetInnerHTML={{ __html: section.content }} />
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
 
-                      {showFeedback && isAnswerSubmitted && answer.is_correct && answer.explanation && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          transition={{ duration: 0.3 }}
-                        >
-                          <p className="mt-2 text-sm text-muted-foreground bg-muted p-2 rounded">
-                            {answer.explanation}
-                          </p>
-                        </motion.div>
-                      )}
+        {resources && resources.length > 0 && (
+          <div className="space-y-4">
+            <h2 className="text-2xl font-bold">Ek Kaynaklar</h2>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {resources.map((resource) => (
+                <Card key={resource.id} className="overflow-hidden border-2 transition-all hover:shadow-md">
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      {getResourceIcon(resource.type)}
+                      <h3 className="font-bold">{resource.title}</h3>
                     </div>
-                  ))}
-                </div>
-              </CardContent>
-              <CardFooter className="flex justify-end p-6">
-                {isAnswerSubmitted ? (
-                  <Button onClick={handleNextQuestion} className="group">
-                    {currentQuestionIndex < questions.length - 1 ? "Sonraki Soru" : "Tamamla"}
-                    <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                ) : (
-                  <Button onClick={handleSubmitAnswer} disabled={!selectedAnswer}>
-                    Cevabı Kontrol Et
-                  </Button>
-                )}
-              </CardFooter>
-            </Card>
-          </motion.div>
-        </AnimatePresence>
+                    {resource.description && (
+                      <p className="text-sm text-muted-foreground mb-4">{resource.description}</p>
+                    )}
+                    <Button asChild variant="outline" size="sm" className="w-full">
+                      <a href={resource.url} target="_blank" rel="noopener noreferrer">
+                        Kaynağa Git
+                      </a>
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="flex justify-end">
+          <Button asChild size="lg" className="group">
+            <Link href={`/lessons/${params.lessonId}/quiz`}>
+              Quiz'e Başla
+              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </Button>
+        </div>
       </div>
     </DashboardLayout>
   )
