@@ -11,7 +11,7 @@ import { ArrowLeft, Pencil, Trash2, BookOpen } from "lucide-react"
 import Link from "next/link"
 import { LessonForm } from "@/components/admin/lesson-form"
 import {
-  AlertDialog,
+  AlertDialog, 
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
