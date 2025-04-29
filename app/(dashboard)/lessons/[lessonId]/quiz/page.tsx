@@ -109,8 +109,8 @@ export default function QuizPage({ params }: QuizPageProps) {
       setScore(score + currentQuestion.xp_value)
       setTotalXp(totalXp + currentQuestion.xp_value)
     } else {
-      // Yanlış cevap verdiğinde kalp azalt
-      const newHearts = hearts - 1
+      // Yanlış cevap verdiğinde kalp azalt (0'dan aşağı düşmemeli)
+      const newHearts = Math.max(0, hearts - 1)
       setHearts(newHearts)
 
       // Kalpleri güncelle
