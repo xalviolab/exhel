@@ -68,17 +68,8 @@ export default async function ModulePage({ params }: ModulePageProps) {
 
         <div className="grid gap-6">
           {lessonsWithLockStatus.map((lesson: any, index: number) => {
-            // Ders için rastgele bir renk seç
-            const colors = [
-              "from-blue-500 to-cyan-400",
-              "from-purple-500 to-pink-400",
-              "from-green-500 to-emerald-400",
-              "from-orange-500 to-amber-400",
-              "from-red-500 to-rose-400",
-              "from-indigo-500 to-violet-400",
-            ];
-            const colorIndex = lesson.id.charCodeAt(0) % colors.length;
-            const gradientColor = colors[colorIndex];
+            // Standart görünüm kullan
+            const standardGradient = "from-primary to-primary/80";
 
             return (
               <Card
@@ -87,10 +78,10 @@ export default async function ModulePage({ params }: ModulePageProps) {
               >
                 <CardContent className="p-0">
                   <div className="flex flex-col md:flex-row">
-                    <div className={`w-full md:w-2 h-2 md:h-auto bg-gradient-to-r ${gradientColor}`}></div>
+                    <div className="w-full md:w-2 h-2 md:h-auto bg-gradient-to-r from-primary to-primary/80"></div>
                     <div className="p-6 flex-1">
                       <div className="flex items-center gap-4">
-                        <div className={`flex h-14 w-14 items-center justify-center rounded-full ${lesson.completed ? 'bg-green-100 dark:bg-green-900/30' : lesson.locked ? 'bg-muted' : `bg-gradient-to-br ${gradientColor}`}`}>
+                        <div className={`flex h-14 w-14 items-center justify-center rounded-full ${lesson.completed ? 'bg-green-100 dark:bg-green-900/30' : lesson.locked ? 'bg-muted' : 'bg-gradient-to-br from-primary to-primary/80'}`}>
                           {lesson.completed ? (
                             <Check className="h-7 w-7 text-green-500" />
                           ) : lesson.locked ? (
@@ -119,7 +110,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
                             asChild
                             variant={lesson.completed ? "outline" : "default"}
                             disabled={lesson.locked}
-                            className={!lesson.locked && !lesson.completed ? `bg-gradient-to-r ${gradientColor}` : ''}
+                            className={!lesson.locked && !lesson.completed ? 'bg-primary' : ''}
                             size="sm"
                           >
                             <Link href={`/lessons/${lesson.id}`}>
