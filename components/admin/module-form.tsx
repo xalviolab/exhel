@@ -23,6 +23,10 @@ import { useRouter } from "next/navigation"
 import { Plus } from "lucide-react"
 import { v4 as uuidv4 } from "uuid"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { ImageUpload } from "@/components/image-upload"
+import { cn } from "@/lib/utils"
 
 interface ModuleFormProps {
   moduleId?: string
@@ -34,6 +38,7 @@ interface ModuleFormProps {
     required_level: number
     is_premium: boolean
     class_level?: string
+    color?: string
   }
 }
 
@@ -50,6 +55,7 @@ export function ModuleForm({ moduleId, defaultValues }: ModuleFormProps = {}) {
   const [requiredLevel, setRequiredLevel] = useState(defaultValues?.required_level || 1)
   const [isPremium, setIsPremium] = useState(defaultValues?.is_premium || false)
   const [classLevel, setClassLevel] = useState(defaultValues?.class_level || "all")
+  const [color, setColor] = useState(defaultValues?.color || "#4f46e5")
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -66,6 +72,7 @@ export function ModuleForm({ moduleId, defaultValues }: ModuleFormProps = {}) {
         required_level: requiredLevel,
         is_premium: isPremium,
         class_level: classLevel,
+        color: color,
       }
 
       if (moduleId) {
@@ -140,13 +147,31 @@ export function ModuleForm({ moduleId, defaultValues }: ModuleFormProps = {}) {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="image_url">Görsel URL</Label>
-              <Input
-                id="image_url"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                placeholder="https://example.com/image.jpg"
-              />
+              <Label htmlFor="image_url">Modül Görseli</Label>
+              <Tabs defaultValue="upload" className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="upload">Görsel Yükle</TabsTrigger>
+                  <TabsTrigger value="url">URL Ekle</TabsTrigger>
+                </TabsList>
+                <TabsContent value="upload" className="pt-2">
+                  <ImageUpload onImageUploaded={(url) => setImageUrl(url)} />
+                </TabsContent>
+                <TabsContent value="url" className="pt-2">
+                  <Input
+                    id="image_url"
+                    value={imageUrl}
+                    onChange={(e) => setImageUrl(e.target.value)}
+                    placeholder="https://example.com/image.jpg"
+                  />
+                </TabsContent>
+              </Tabs>
+              {imageUrl && (
+                <div className="mt-2 flex items-center justify-center">
+                  <div className="relative h-24 w-24 overflow-hidden rounded-lg border-2 border-muted">
+                    <img src={imageUrl} alt="Modül görseli" className="h-full w-full object-cover" />
+                  </div>
+                </div>
+              )}
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
@@ -187,6 +212,43 @@ export function ModuleForm({ moduleId, defaultValues }: ModuleFormProps = {}) {
                   <SelectItem value="medical">Tıp Fakültesi</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="color">Modül Rengi</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    id="color"
+                    variant="outline"
+                    className={cn("w-full justify-start text-left font-normal", !color && "text-muted-foreground")}
+                    style={{ backgroundColor: color, color: isLightColor(color) ? "#000" : "#fff" }}
+                  >
+                    <div className="w-4 h-4 rounded-full mr-2" style={{ backgroundColor: color }}></div>
+                    <span>{color}</span>
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-full p-3">
+                  <div className="grid gap-2">
+                    <div className="grid grid-cols-5 gap-2">
+                      {["#4f46e5", "#0ea5e9", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899", "#f97316", "#14b8a6", "#64748b"].map((c) => (
+                        <div
+                          key={c}
+                          className={cn("w-8 h-8 rounded-full cursor-pointer border-2", color === c ? "border-black dark:border-white" : "border-transparent")}
+                          style={{ backgroundColor: c }}
+                          onClick={() => setColor(c)}
+                        />
+                      ))}
+                    </div>
+                    <Input
+                      type="color"
+                      value={color}
+                      onChange={(e) => setColor(e.target.value)}
+                      className="w-full h-8"
+                    />
+                  </div>
+                </PopoverContent>
+              </Popover>
             </div>
 
             <div className="flex items-center gap-2">
