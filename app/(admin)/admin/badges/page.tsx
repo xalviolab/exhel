@@ -1,18 +1,42 @@
-import { requireAdmin } from "@/lib/auth"
+"use client"
+
+import { useState, useEffect } from "react"
 import { AdminLayout } from "@/components/admin-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Award, Plus } from "lucide-react"
 import { BadgeForm } from "@/components/admin/badge-form"
+import { createClient } from "@/lib/supabase/client"
 
-export default async function AdminBadgesPage() {
-  await requireAdmin()
+// Sayfanın dinamik olarak oluşturulmasını zorluyoruz
+export const dynamic = 'force-dynamic'
 
-  const supabase = await import("@/lib/supabase/server").then((mod) => mod.createServerClient())
-  const { data: badges, error } = await supabase
-    .from("badges")
-    .select("*")
-    .order("requirement_type", { ascending: true })
+export default function AdminBadgesPage() {
+  const [badges, setBadges] = useState<any[]>([])
+  const [error, setError] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchBadges = async () => {
+      try {
+        const supabase = createClient()
+        const { data, error } = await supabase
+          .from("badges")
+          .select("*")
+          .order("requirement_type", { ascending: true })
+
+        if (error) throw error
+        setBadges(data || [])
+      } catch (err) {
+        console.error("Error fetching badges:", err)
+        setError(err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchBadges()
+  }, [])
 
   if (error) {
     console.error("Error fetching badges:", error)
