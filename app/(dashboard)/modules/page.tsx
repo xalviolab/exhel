@@ -69,17 +69,8 @@ export default async function ModulesPage({
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filteredModules.map((module) => {
-            // Modül için rastgele bir renk seç
-            const colors = [
-              "from-blue-500 to-cyan-400",
-              "from-purple-500 to-pink-400",
-              "from-green-500 to-emerald-400",
-              "from-orange-500 to-amber-400",
-              "from-red-500 to-rose-400",
-              "from-indigo-500 to-violet-400",
-            ];
-            const colorIndex = module.id.charCodeAt(0) % colors.length;
-            const gradientColor = colors[colorIndex];
+            // Standart görünüm kullan
+            const standardGradient = "from-primary to-primary/80";
 
             return (
               <Card
@@ -89,7 +80,7 @@ export default async function ModulesPage({
                   module.required_level > user.level ? "opacity-75" : "",
                 )}
               >
-                <div className={`aspect-video w-full bg-gradient-to-br ${gradientColor} relative`}>
+                <div className={`aspect-video w-full bg-gradient-to-br ${standardGradient} relative`}>
                   {module.image_url ? (
                     <img
                       src={module.image_url || "/placeholder.svg"}
@@ -130,7 +121,7 @@ export default async function ModulesPage({
                     className={cn(
                       "w-full mt-2 shadow-sm transition-all",
                       !module.required_level || module.required_level <= user.level
-                        ? `bg-gradient-to-r ${gradientColor} hover:shadow-md hover:translate-y-[-2px]`
+                        ? "bg-primary hover:shadow-md hover:translate-y-[-2px]"
                         : ""
                     )}
                     disabled={module.required_level > user.level}
