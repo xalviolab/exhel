@@ -7,6 +7,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Award, Flame, Heart, TrendingUp, User } from "lucide-react"
 import { cache } from "react"
 
+// Sayfayı dinamik olarak işaretle
+export const dynamic = 'force-dynamic'
+
 // Önbelleğe alma fonksiyonları
 const getCachedUserStats = cache(getUserStats)
 const getCachedUserBadges = cache(getUserBadges)
