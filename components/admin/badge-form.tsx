@@ -20,6 +20,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/components/ui/use-toast"
 import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
+import { ImageUpload } from "@/components/image-upload"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 interface BadgeFormProps {
   badgeId?: string
@@ -137,13 +139,31 @@ export function BadgeForm({ badgeId, type, defaultValues, children }: BadgeFormP
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="image_url">Görsel URL</Label>
-              <Input
-                id="image_url"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                placeholder="https://example.com/image.jpg"
-              />
+              <Label htmlFor="image_url">Rozet Görseli</Label>
+              <Tabs defaultValue="upload" className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="upload">Görsel Yükle</TabsTrigger>
+                  <TabsTrigger value="url">URL Ekle</TabsTrigger>
+                </TabsList>
+                <TabsContent value="upload" className="pt-2">
+                  <ImageUpload onImageUploaded={(url) => setImageUrl(url)} />
+                </TabsContent>
+                <TabsContent value="url" className="pt-2">
+                  <Input
+                    id="image_url"
+                    value={imageUrl}
+                    onChange={(e) => setImageUrl(e.target.value)}
+                    placeholder="https://example.com/image.jpg"
+                  />
+                </TabsContent>
+              </Tabs>
+              {imageUrl && (
+                <div className="mt-2 flex items-center justify-center">
+                  <div className="relative h-24 w-24 overflow-hidden rounded-full border-2 border-muted">
+                    <img src={imageUrl} alt="Rozet görseli" className="h-full w-full object-cover" />
+                  </div>
+                </div>
+              )}
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
