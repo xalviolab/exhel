@@ -4,6 +4,9 @@ import { getSession } from "@/lib/auth"
 import { Heart, Activity, Award, BookOpen, Users, ArrowRight, CheckCircle, AlertTriangle } from "lucide-react"
 import { DisclaimerDialog } from "@/components/disclaimer-dialog"
 
+// Sayfayı dinamik olarak işaretle
+export const dynamic = 'force-dynamic'
+
 export default async function Home() {
   const session = await getSession()
 
