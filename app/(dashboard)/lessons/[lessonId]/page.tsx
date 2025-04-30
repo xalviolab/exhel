@@ -155,8 +155,11 @@ export default async function LessonPage({ params }: LessonPageProps) {
             <div className="flex items-center gap-1 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 px-3 py-1.5 rounded-full">
               <Heart className="h-5 w-5" />
               <span className="font-medium">
-                {user.hearts}/{user.max_hearts}
+                {Math.max(0, user.hearts)}/{user.max_hearts}
               </span>
+              {Math.max(0, user.hearts) === 0 && (
+                <span className="text-xs ml-1 text-red-500">(24s içinde yenilenir)</span>
+              )}
             </div>
           </div>
         </div>
