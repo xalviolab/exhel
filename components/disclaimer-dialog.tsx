@@ -23,6 +23,17 @@ export function DisclaimerDialog() {
         }
     }, [])
 
+    // Dashboard'da her zaman göster
+    useEffect(() => {
+        // Dashboard sayfasında olup olmadığını kontrol et
+        if (window.location.pathname.includes('/dashboard')) {
+            const hasAccepted = localStorage.getItem("disclaimer-accepted")
+            if (!hasAccepted) {
+                setOpen(true)
+            }
+        }
+    }, [])
+
     const handleAccept = () => {
         // Kullanıcının onayını localStorage'a kaydet
         localStorage.setItem("disclaimer-accepted", "true")
