@@ -7,7 +7,7 @@ import { DashboardLayout } from "@/components/dashboard-layout"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { BookOpen, Check, Lock } from "lucide-react"
+import { BookOpen, Check, Lock, Award } from "lucide-react"
 import { notFound } from "next/navigation"
 
 interface ModulePageProps {
@@ -94,7 +94,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
                           <div className="flex items-center gap-2">
                             <h3 className="text-lg font-medium">{lesson.title}</h3>
                             {lesson.badge_id && (
-                              <div className="bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 px-2 py-0.5 rounded-full text-xs font-medium flex items-center gap-1">
+                              <div className="bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 px-2 py-0.5 rounded-md text-xs font-medium flex items-center gap-1">
                                 <Award className="h-3 w-3" />
                                 Rozetli
                               </div>
