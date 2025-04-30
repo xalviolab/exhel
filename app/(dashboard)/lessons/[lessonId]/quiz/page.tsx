@@ -117,6 +117,15 @@ export default function QuizPage({ params }: QuizPageProps) {
       const supabase = createClient()
       await supabase.from("users").update({ hearts: newHearts }).eq("id", user.id)
 
+      // Kalp 0 olduğunda yenilenme süresi bilgisi göster
+      if (newHearts === 0) {
+        toast({
+          title: "Kalpleriniz tükendi",
+          description: "24 saat içinde yenilenecektir.",
+          variant: "destructive"
+        })
+      }
+
       // Kalp kalmadıysa dersi tekrar etmesi gerekiyor
       if (newHearts <= 0) {
         setTimeout(() => {
