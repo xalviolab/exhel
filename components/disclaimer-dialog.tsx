@@ -47,6 +47,10 @@ export function DisclaimerDialog() {
             if (!hasAccepted && !newOpen) {
                 return
             }
+            // Dashboard sayfasında ise ve kullanıcı onaylamamışsa, kapanmasını engelle
+            if (window.location.pathname.includes('/dashboard') && !hasAccepted) {
+                return
+            }
             setOpen(newOpen)
         }}>
             <AlertDialogContent className="max-w-md">
