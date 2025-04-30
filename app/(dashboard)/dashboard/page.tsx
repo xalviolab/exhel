@@ -215,8 +215,11 @@ export default async function DashboardPage() {
             <div className="flex items-center gap-1 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 px-3 py-1.5 rounded-full">
               <Heart className="h-5 w-5" />
               <span className="font-medium">
-                {user.hearts}/{user.max_hearts}
+                {Math.max(0, user.hearts)}/{user.max_hearts}
               </span>
+              {Math.max(0, user.hearts) === 0 && (
+                <span className="text-xs ml-1 text-red-500">(24s içinde yenilenir)</span>
+              )}
             </div>
             <div className="flex items-center gap-1 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 px-3 py-1.5 rounded-full">
               <Flame className="h-5 w-5" />
@@ -401,44 +404,7 @@ export default async function DashboardPage() {
           </Card>
         </div>
 
-        <Card className="overflow-hidden border-2 transition-all hover:shadow-md">
-          <CardHeader className="bg-primary/5">
-            <CardTitle>Günlük Aktivite</CardTitle>
-            <CardDescription>Son 7 gündeki aktiviteniz</CardDescription>
-          </CardHeader>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              {[...Array(7)].map((_, i) => {
-                const date = new Date()
-                date.setDate(date.getDate() - (6 - i))
-                const day = date.toLocaleDateString("tr-TR", { weekday: "short" })
-                const isToday = i === 6
-                const isActive = Math.random() > 0.3 // Rastgele aktivite durumu
-
-                return (
-                  <div key={i} className="flex flex-col items-center">
-                    <div
-                      className={cn(
-                        "w-12 h-12 rounded-full flex items-center justify-center mb-1",
-                        isActive ? "bg-primary/20" : "bg-muted",
-                        isToday && "ring-2 ring-primary",
-                      )}
-                    >
-                      {isActive ? (
-                        <Activity className={cn("h-6 w-6", isToday ? "text-primary" : "text-primary/70")} />
-                      ) : (
-                        <div className="w-6 h-6" />
-                      )}
-                    </div>
-                    <span className={cn("text-xs font-medium", isToday ? "text-primary" : "text-muted-foreground")}>
-                      {day}
-                    </span>
-                  </div>
-                )
-              })}
-            </div>
-          </CardContent>
-        </Card>
+        {/* Günlük Aktivite bölümü kaldırıldı */}
       </div>
     </DashboardLayout>
   )
