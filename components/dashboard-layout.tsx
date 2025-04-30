@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react"
 import Link from "next/link"
-import { Heart, Home, BookOpen, Award, User, Settings, LogOut, Menu, X, AlertTriangle, MessageSquare } from "lucide-react"
+import { Heart, Home, BookOpen, Award, User, Settings, LogOut, Menu, X, MessageSquare } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { ThemeToggle } from "@/components/theme-toggle"
