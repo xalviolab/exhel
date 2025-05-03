@@ -290,7 +290,7 @@ export default function QuizPage({ params }: QuizPageProps) {
     } catch (error) {
       console.error("Quiz tamamlanırken hata oluştu:", error)
     }
-  };
+  }
 
   if (loading) {
     return (
