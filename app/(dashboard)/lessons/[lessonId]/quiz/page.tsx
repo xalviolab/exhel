@@ -23,6 +23,7 @@ export default function QuizPage({ params }: QuizPageProps) {
   const [questions, setQuestions] = useState<any[]>([])
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null)
+  const [selectedAnswers, setSelectedAnswers] = useState<(string | null)[]>([])
   const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false)
   const [isCorrect, setIsCorrect] = useState(false)
   const [score, setScore] = useState(0)
@@ -177,6 +178,13 @@ export default function QuizPage({ params }: QuizPageProps) {
   }
 
   const handleNextQuestion = () => {
+    // Seçilen cevabı kaydet
+    setSelectedAnswers(prev => {
+      const newAnswers = [...prev]
+      newAnswers[currentQuestionIndex] = selectedAnswer
+      return newAnswers
+    })
+
     setSelectedAnswer(null)
     setIsAnswerSubmitted(false)
     setShowFeedback(false)
@@ -212,6 +220,23 @@ export default function QuizPage({ params }: QuizPageProps) {
           xp: user.xp + totalXp,
         })
         .eq("id", user.id)
+
+      // Kullanıcı istatistiklerini güncelle
+      // Doğru cevap sayısını hesapla
+      const correctAnswersCount = questions.reduce((count, question, index) => {
+        const questionResult = question.answers.find(a => a.id === selectedAnswers[index])?.is_correct || false
+        return questionResult ? count + 1 : count
+      }, 0)
+
+      // Quiz istatistiklerini güncelle
+      await supabase.rpc('update_quiz_stats', {
+        p_user_id: user.id,
+        p_lesson_id: params.lessonId,
+        p_score: score,
+        p_total_possible_score: questions.reduce((total, q) => total + q.xp_value, 0),
+        p_correct_answers: correctAnswersCount,
+        p_total_questions: questions.length
+      })
 
       // Ders tamamlandığında rozet kontrolü
       const { data: lessonData } = await supabase
