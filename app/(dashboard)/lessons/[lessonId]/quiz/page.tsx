@@ -286,12 +286,12 @@ export default function QuizPage({ params }: QuizPageProps) {
             }
           }
         }
-      } catch (error) {
+      }; catch (error) {
         console.error("Quiz tamamlanırken hata oluştu:", error)
       }
-    }
+    };
 
-  if (loading) {
+    if (loading) {
       return (
         <DashboardLayout>
           <div className="flex items-center justify-center h-[60vh]">
@@ -521,4 +521,3 @@ return (
   </DashboardLayout>
 )
   }
- 
