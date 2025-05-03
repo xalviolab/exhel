@@ -38,34 +38,17 @@ export default async function ModulePage({ params }: ModulePageProps) {
     return {
       ...lesson,
       completed: progress?.completed || false,
-      attempted: progress ? true : false, // Ders denenmiş mi kontrol et
       score: progress?.score || 0,
-    };
+    }
   })
 
   // Derslerin kilit durumunu kontrol et
   // İlk ders her zaman açık, diğerleri bir önceki ders tamamlanmışsa açık
-  // Ayrıca kalp sayısı 0 ise ve ders tamamlanmamışsa kilitli olarak işaretle
   const lessonsWithLockStatus = lessonsWithProgress.map((lesson: any, index: number) => {
-    // Ders daha önce tamamlanmış mı kontrol et
-    const isCompleted = lesson.completed
-
-    // Tamamlanmış dersler her zaman erişilebilir
-    if (isCompleted) {
-      return { ...lesson, locked: false }
-    }
-
-    // Kalp sayısı 0 ise ve ders tamamlanmamışsa kilitli
-    if (user.hearts <= 0) {
-      return { ...lesson, locked: true }
-    }
-
-    // İlk ders her zaman açık (kalp varsa)
     if (index === 0) {
       return { ...lesson, locked: false }
     }
 
-    // Diğer dersler için önceki ders tamamlanmışsa açık
     const previousLesson = lessonsWithProgress[index - 1]
     return { ...lesson, locked: !previousLesson.completed }
   })
@@ -131,7 +114,7 @@ export default async function ModulePage({ params }: ModulePageProps) {
                             size="sm"
                           >
                             <Link href={`/lessons/${lesson.id}`}>
-                              {lesson.completed ? "Tekrar Et" : lesson.locked ? "Kilitli" : lesson.attempted && !lesson.completed ? "Tekrar Dene" : "Başla"}
+                              {lesson.completed ? "Tekrar Et" : lesson.locked ? "Kilitli" : "Başla"}
                             </Link>
                           </Button>
                         </div>

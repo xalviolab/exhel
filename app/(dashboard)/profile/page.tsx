@@ -110,17 +110,12 @@ export default async function ProfilePage() {
                       <p className="text-2xl font-bold">{userStats?.total_questions_answered || 0}</p>
                     </div>
                     <div className="space-y-1">
-                      <p className="text-sm text-muted-foreground">Başarı Oranı</p>
+                      <p className="text-sm text-muted-foreground">Doğruluk Oranı</p>
                       <p className="text-2xl font-bold">
                         {userStats?.total_questions_answered
                           ? Math.round((userStats.correct_answers / userStats.total_questions_answered) * 100)
                           : 0}
                         %
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {userStats?.total_questions_answered
-                          ? `${userStats.correct_answers} doğru / ${userStats.total_questions_answered} toplam`
-                          : "Henüz soru çözülmemiş"}
                       </p>
                     </div>
                   </div>

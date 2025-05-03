@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import { Plus, Pencil, BookOpen } from "lucide-react"
 import { ModuleForm } from "@/components/admin/module-form"
-import { cn, isLightColor } from "@/lib/utils"
+import { cn } from "@/lib/utils"
 
 export default async function AdminModulesPage() {
   await requireAdmin()
@@ -33,7 +33,7 @@ export default async function AdminModulesPage() {
                   <img
                     src={module.image_url || "/placeholder.svg"}
                     alt={module.title}
-                    className="object-cover w-full h-full"
+                    className="object-contain w-full h-full"
                   />
                 ) : (
                   <div className="flex items-center justify-center h-full">

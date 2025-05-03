@@ -35,18 +35,28 @@ export default async function LessonPage({ params }: LessonPageProps) {
   // Kullanıcının ilerleme durumunu kontrol et
   const userProgress = await getUserProgress(user.id)
 
-  // Yeni erişim kontrolü fonksiyonunu kullan
-  const { isLessonLocked } = await import("@/lib/access-control")
-
-  // Ders daha önce tamamlanmış mı kontrol et
-  const lessonCompleted = userProgress.some(p => p.lesson_id === params.lessonId && p.completed)
-
   // Dersin kilitli olup olmadığını kontrol et
-  let isLocked = false
+  const moduleId = lesson.module_id
+  const moduleLessons = await getLessonDetails(moduleId).then(mod => mod?.lessons || [])
 
-  // Tamamlanmış dersler her zaman erişilebilir
-  if (!lessonCompleted) {
-    isLocked = await isLessonLocked(user.id, params.lessonId)
+  // Dersleri sırala
+  const sortedLessons = [...moduleLessons].sort((a, b) => a.order_index - b.order_index)
+
+  // Dersin modüldeki indeksini bul
+  const lessonIndex = sortedLessons.findIndex(l => l.id === params.lessonId)
+
+  // İlk ders değilse ve önceki ders tamamlanmamışsa kilitlidir
+  let isLocked = false
+  if (lessonIndex > 0) {
+    const previousLesson = sortedLessons[lessonIndex - 1]
+    const previousLessonCompleted = userProgress.some(p => p.lesson_id === previousLesson.id && p.completed)
+    isLocked = !previousLessonCompleted
+  }
+
+  // Kalp sayısı 0 ise ve ders daha önce tamamlanmamışsa erişimi engelle
+  const lessonCompleted = userProgress.some(p => p.lesson_id === params.lessonId && p.completed)
+  if (user.hearts <= 0 && !lessonCompleted) {
+    isLocked = true
   }
 
   // Ders kilitliyse ve tamamlanmamışsa modül sayfasına yönlendir
