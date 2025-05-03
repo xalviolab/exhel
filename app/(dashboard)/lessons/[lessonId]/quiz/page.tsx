@@ -63,12 +63,6 @@ export default function QuizPage({ params }: QuizPageProps) {
         setUser(userData)
         setHearts(userData.hearts)
 
-        // Kullanıcının ilerleme durumunu kontrol et
-        const { data: userProgress } = await supabase
-          .from("user_progress")
-          .select("*")
-          .eq("user_id", session.user.id)
-
         // Dersin bilgilerini al
         const { data: lessonData } = await supabase
           .from("lessons")
@@ -80,33 +74,28 @@ export default function QuizPage({ params }: QuizPageProps) {
           throw new Error("Ders bulunamadı")
         }
 
-        // Modüldeki tüm dersleri al ve sırala
-        const { data: moduleLessons } = await supabase
-          .from("lessons")
+        // Erişim kontrolü - isLessonLocked fonksiyonunu doğrudan çağıramıyoruz (client side)
+        // Bu yüzden RPC kullanıyoruz
+        const { data: isLocked, error: lockCheckError } = await supabase.rpc(
+          'check_lesson_access',
+          { p_user_id: session.user.id, p_lesson_id: params.lessonId }
+        )
+
+        if (lockCheckError) {
+          console.error("Ders erişim kontrolü yapılamadı:", lockCheckError)
+          // Hata durumunda güvenli tarafta kal
+          router.push(`/modules/${lessonData.module_id}`)
+          return
+        }
+
+        // Kullanıcının ilerleme durumunu kontrol et
+        const { data: userProgress } = await supabase
+          .from("user_progress")
           .select("*")
-          .eq("module_id", lessonData.module_id)
-          .order("order_index")
+          .eq("user_id", session.user.id)
 
-        if (!moduleLessons || moduleLessons.length === 0) {
-          throw new Error("Modül dersleri bulunamadı")
-        }
-
-        // Dersin modüldeki indeksini bul
-        const lessonIndex = moduleLessons.findIndex(l => l.id === params.lessonId)
-
-        // İlk ders değilse ve önceki ders tamamlanmamışsa kilitlidir
-        let isLocked = false
-        if (lessonIndex > 0) {
-          const previousLesson = moduleLessons[lessonIndex - 1]
-          const previousLessonCompleted = userProgress?.some(p => p.lesson_id === previousLesson.id && p.completed)
-          isLocked = !previousLessonCompleted
-        }
-
-        // Kalp sayısı 0 ise ve ders daha önce tamamlanmamışsa erişimi engelle
+        // Ders daha önce tamamlanmış mı kontrol et
         const lessonCompleted = userProgress?.some(p => p.lesson_id === params.lessonId && p.completed)
-        if (userData.hearts <= 0 && !lessonCompleted) {
-          isLocked = true
-        }
 
         // Ders kilitliyse ve tamamlanmamışsa modül sayfasına yönlendir
         if (isLocked && !lessonCompleted) {
