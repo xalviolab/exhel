@@ -40,8 +40,8 @@ export default async function ModulePage({ params }: ModulePageProps) {
       completed: progress?.completed || false,
       attempted: progress ? true : false, // Ders denenmiş mi kontrol et
       score: progress?.score || 0,
-
-    })
+    };
+  })
 
   // Derslerin kilit durumunu kontrol et
   // İlk ders her zaman açık, diğerleri bir önceki ders tamamlanmışsa açık
