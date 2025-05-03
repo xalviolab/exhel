@@ -59,8 +59,10 @@ export default async function LessonPage({ params }: LessonPageProps) {
     isLocked = true
   }
 
-  // Ders kilitliyse ve tamamlanmamışsa uyarı göster
+  // Ders kilitliyse ve tamamlanmamışsa modül sayfasına yönlendir
   if (isLocked && !lessonCompleted) {
+    // Doğrudan URL ile erişimi engelle ve modül sayfasına yönlendir
+    redirect(`/modules/${lesson.module_id}`)
     return (
       <DashboardLayout>
         <div className="space-y-6">
