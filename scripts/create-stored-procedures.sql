@@ -82,11 +82,12 @@ CREATE OR REPLACE FUNCTION update_quiz_stats(
   p_correct_answers INTEGER,
   p_total_questions INTEGER
 )
-RETURNS VOID
+RETURNS BOOLEAN
 LANGUAGE plpgsql
 AS $$
 DECLARE
   v_user_stats RECORD;
+  v_success_rate NUMERIC;
 BEGIN
   -- Quiz sonuçlarını kaydet
   INSERT INTO quiz_results (
@@ -106,7 +107,15 @@ BEGIN
     p_total_questions,
     NOW()
   );
-
+  
+  -- Başarı oranını hesapla
+  v_success_rate := ROUND((p_correct_answers::NUMERIC / p_total_questions::NUMERIC) * 100);
+  
+  -- Başarı oranı %50'nin altındaysa dersi tamamlanmış olarak işaretleme
+  IF v_success_rate < 50 THEN
+    RETURN FALSE;
+  END IF;
+  
   -- Kullanıcının mevcut istatistiklerini kontrol et
   SELECT * INTO v_user_stats FROM user_stats WHERE user_id = p_user_id;
 
@@ -139,6 +148,9 @@ BEGIN
       NOW()
     );
   END IF;
+  
+  -- Başarılı tamamlama durumunda TRUE döndür
+  RETURN TRUE;
 END;
 $$;
 
