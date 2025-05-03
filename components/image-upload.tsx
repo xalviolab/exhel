@@ -20,6 +20,7 @@ export function ImageUpload({ onImageUploaded, className }: ImageUploadProps) {
   const [isUploading, setIsUploading] = useState(false)
   const [dragActive, setDragActive] = useState(false)
   const [imageUrl, setImageUrl] = useState("")
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const { toast } = useToast()
 
@@ -54,6 +55,7 @@ export function ImageUpload({ onImageUploaded, className }: ImageUploadProps) {
       const url = await uploadImage(file)
 
       if (url) {
+        setPreviewUrl(url)
         onImageUploaded(url)
         toast({
           title: "Başarılı",
@@ -101,6 +103,7 @@ export function ImageUpload({ onImageUploaded, className }: ImageUploadProps) {
       return
     }
 
+    setPreviewUrl(imageUrl)
     onImageUploaded(imageUrl)
     toast({
       title: "Başarılı",
@@ -143,37 +146,57 @@ export function ImageUpload({ onImageUploaded, className }: ImageUploadProps) {
         </TabsList>
 
         <TabsContent value="upload">
-          <div
-            className={cn(
-              "border-2 border-dashed rounded-md p-6 flex flex-col items-center justify-center cursor-pointer transition-colors",
-              dragActive ? "border-primary bg-primary/5" : "border-muted-foreground/25 hover:border-primary/50",
-              isUploading && "opacity-50 pointer-events-none",
-            )}
-            onDragEnter={handleDrag}
-            onDragOver={handleDrag}
-            onDragLeave={handleDrag}
-            onDrop={handleDrop}
-            onClick={handleButtonClick}
-          >
-            <input
-              ref={inputRef}
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={(e) => handleFileChange(e.target.files)}
-              disabled={isUploading}
-            />
+          <div className="space-y-4">
+            <div
+              className={cn(
+                "border-2 border-dashed rounded-md p-6 flex flex-col items-center justify-center cursor-pointer transition-colors",
+                dragActive ? "border-primary bg-primary/5" : "border-muted-foreground/25 hover:border-primary/50",
+                isUploading && "opacity-50 pointer-events-none",
+              )}
+              onDragEnter={handleDrag}
+              onDragOver={handleDrag}
+              onDragLeave={handleDrag}
+              onDrop={handleDrop}
+              onClick={handleButtonClick}
+            >
+              <input
+                ref={inputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => handleFileChange(e.target.files)}
+                disabled={isUploading}
+              />
 
-            {isUploading ? (
-              <div className="flex flex-col items-center justify-center py-4">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-2"></div>
-                <p className="text-sm text-muted-foreground">Yükleniyor...</p>
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center py-4">
-                <ImageIcon className="h-10 w-10 text-muted-foreground mb-2" />
-                <p className="text-sm font-medium mb-1">Görsel yüklemek için tıklayın veya sürükleyin</p>
-                <p className="text-xs text-muted-foreground">PNG, JPG, GIF, WEBP (maks. 2MB)</p>
+              {isUploading ? (
+                <div className="flex flex-col items-center justify-center py-4">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-2"></div>
+                  <p className="text-sm text-muted-foreground">Yükleniyor...</p>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-4">
+                  <ImageIcon className="h-10 w-10 text-muted-foreground mb-2" />
+                  <p className="text-sm font-medium mb-1">Görsel yüklemek için tıklayın veya sürükleyin</p>
+                  <p className="text-xs text-muted-foreground">PNG, JPG, GIF, WEBP (maks. 2MB)</p>
+                </div>
+              )}
+            </div>
+
+            {previewUrl && (
+              <div className="mt-4 flex flex-col items-center">
+                <p className="text-sm font-medium mb-2">Yüklenen Görsel:</p>
+                <div className="relative h-40 w-full overflow-hidden rounded-lg border-2 border-muted">
+                  <img src={previewUrl} alt="Yüklenen görsel" className="h-full w-full object-contain" />
+                </div>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="mt-2"
+                  onClick={() => setPreviewUrl(null)}
+                >
+                  Görseli Kaldır
+                </Button>
               </div>
             )}
           </div>
