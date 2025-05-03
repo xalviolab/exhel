@@ -25,12 +25,11 @@ export async function updateUserStatus(userId: string) {
         const lastUpdated = user.streak_last_updated ? new Date(user.streak_last_updated) : null
         const updates: Record<string, any> = {}
 
-        // Kalpleri kontrol et ve gerekirse yenile
-        if (user.hearts < user.max_hearts) {
-            // Son güncelleme zamanından bu yana 24 saat geçmiş mi kontrol et
-            if (lastUpdated && now.getTime() - lastUpdated.getTime() >= 24 * 60 * 60 * 1000) {
-                updates.hearts = user.max_hearts
-            }
+        // Kalpleri kontrol et ve her gün yenile
+        // Son güncelleme zamanından bu yana 24 saat geçmiş mi kontrol et
+        if (lastUpdated && now.getTime() - lastUpdated.getTime() >= 24 * 60 * 60 * 1000) {
+            // Önceki gün kaç can kaldığına bakılmaksızın canları maksimuma yenile
+            updates.hearts = user.max_hearts
         }
 
         // Günlük seriyi kontrol et ve güncelle
@@ -99,12 +98,11 @@ export async function updateUserStatusServer(userId: string) {
         const lastUpdated = user.streak_last_updated ? new Date(user.streak_last_updated) : null
         const updates: Record<string, any> = {}
 
-        // Kalpleri kontrol et ve gerekirse yenile
-        if (user.hearts < user.max_hearts) {
-            // Son güncelleme zamanından bu yana 24 saat geçmiş mi kontrol et
-            if (lastUpdated && now.getTime() - lastUpdated.getTime() >= 24 * 60 * 60 * 1000) {
-                updates.hearts = user.max_hearts
-            }
+        // Kalpleri kontrol et ve her gün yenile
+        // Son güncelleme zamanından bu yana 24 saat geçmiş mi kontrol et
+        if (lastUpdated && now.getTime() - lastUpdated.getTime() >= 24 * 60 * 60 * 1000) {
+            // Önceki gün kaç can kaldığına bakılmaksızın canları maksimuma yenile
+            updates.hearts = user.max_hearts
         }
 
         // Günlük seriyi kontrol et ve güncelle
