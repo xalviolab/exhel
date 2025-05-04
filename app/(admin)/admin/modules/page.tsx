@@ -9,6 +9,8 @@ import { Plus, Pencil, BookOpen } from "lucide-react"
 import { ModuleForm } from "@/components/admin/module-form"
 import { cn } from "@/lib/utils"
 
+export const dynamic = 'force-dynamic' // Add this line
+
 export default async function AdminModulesPage() {
   await requireAdmin()
 
