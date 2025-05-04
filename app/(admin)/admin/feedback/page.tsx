@@ -5,6 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Smile, Meh, Frown, Clock, CheckCircle, XCircle } from "lucide-react"
 
+export const dynamic = 'force-dynamic' // Add this line
+
 export default async function AdminFeedbackPage() {
   await requireAdmin()
   const supabase = createServerClient()
