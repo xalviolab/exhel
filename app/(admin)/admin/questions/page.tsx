@@ -7,6 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { HelpCircle, Plus } from "lucide-react"
 import Link from "next/link"
 
+export const dynamic = 'force-dynamic'
+
 export default async function AdminQuestionsPage() {
   await requireAdmin()
 
@@ -29,13 +31,13 @@ export default async function AdminQuestionsPage() {
   // Soruları getir
   const { data: questions } = firstLessonId
     ? await supabase
-        .from("questions")
-        .select(`
+      .from("questions")
+      .select(`
           *,
           answers (*)
         `)
-        .eq("lesson_id", firstLessonId)
-        .order("order_index")
+      .eq("lesson_id", firstLessonId)
+      .order("order_index")
     : { data: [] }
 
   return (
@@ -155,11 +157,10 @@ export default async function AdminQuestionsPage() {
                             {question.answers.map((answer) => (
                               <div
                                 key={answer.id}
-                                className={`p-2 border rounded-md ${
-                                  answer.is_correct
+                                className={`p-2 border rounded-md ${answer.is_correct
                                     ? "border-green-500 bg-green-50 dark:bg-green-900/20"
                                     : "border-gray-200"
-                                }`}
+                                  }`}
                               >
                                 <div className="flex justify-between items-center">
                                   <span>{answer.answer_text}</span>
