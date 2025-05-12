@@ -62,7 +62,7 @@ export default async function Home() {
                     Kardiyoloji Eğitiminde Yeni Nesil Öğrenme
                   </h1>
                   <p className="max-w-[600px] text-gray-500 md:text-xl dark:text-gray-400">
-                    Duolingo benzeri interaktif öğrenme deneyimi ile kardiyoloji bilginizi geliştirin. Eğlenceli
+                    İnteraktif öğrenme deneyimi ile bilginizi geliştirin. Eğlenceli
                     quizler, görsel içerikler ve gamification özellikleriyle öğrenmeyi keyifli hale getirin.
                   </p>
                 </div>
@@ -97,7 +97,7 @@ export default async function Home() {
                           <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
                         </div>
                         <div>
-                          <h3 className="font-medium">Kalp Anatomisi</h3>
+                          <h3 className="font-medium">Anatomiye Giriş</h3>
                           <p className="text-sm text-gray-500 dark:text-gray-400">Ders tamamlandı</p>
                         </div>
                       </div>
@@ -108,7 +108,7 @@ export default async function Home() {
                           <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
                         </div>
                         <div>
-                          <h3 className="font-medium">Kardiyak Siklus</h3>
+                          <h3 className="font-medium">Kalp Anatomisi</h3>
                           <p className="text-sm text-gray-500 dark:text-gray-400">Ders tamamlandı</p>
                         </div>
                       </div>
