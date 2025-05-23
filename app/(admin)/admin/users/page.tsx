@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { requireAdmin } from "@/lib/auth"
 import { getAllUsers } from "@/lib/db"
 import { AdminLayout } from "@/components/admin-layout"
