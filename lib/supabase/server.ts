@@ -42,7 +42,17 @@ const hasEnvVars = () => {
 
 // Ensure cookies are accessed within the async context
 const getCookieStore = async () => {
-  return cookies();
+  // Only allow cookies in dynamic server context
+  if (typeof window !== "undefined") {
+    throw new Error("Cannot access cookies on the client side.");
+  }
+  // If running in static export, cookies() will throw
+  try {
+    return cookies();
+  } catch (err) {
+    console.error("Cookies cannot be accessed in static export context.");
+    return null;
+  }
 };
 
 // Server component client (cached)
@@ -55,6 +65,9 @@ export const createServerClient = cache(async () => {
     }
 
     const cookieStore = await getCookieStore();
+    if (!cookieStore) {
+      throw new Error("Cookies are not available in static export context. This page must use dynamic rendering.");
+    }
     return createServerComponentClient<Database>({
       cookies: () => cookieStore,
       options: {
@@ -80,6 +93,9 @@ export const createServerActionClient = async () => {
     }
 
     const cookieStore = await getCookieStore();
+    if (!cookieStore) {
+      throw new Error("Cookies are not available in static export context. This API route must use dynamic rendering.");
+    }
     return createRouteHandlerClient<Database>({
       cookies: () => cookieStore,
       options: {
