@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { Award, BookOpen, Heart, Flame, Trophy, TrendingUp, ArrowRight, CheckCircle, Activity } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { redirect } from "next/navigation"
 
 // Varsayılan modüller
 const defaultModules = [
@@ -110,8 +111,13 @@ export default async function DashboardPage() {
   let userBadges = defaultBadges
   let userProgress = defaultProgress
 
+  const session = await requireAuth()
+
+  if (!session) {
+    redirect("/login")
+  }
+
   try {
-    await requireAuth()
     user = await getUserDetails()
 
     // Eğer kullanıcı bilgileri alınamazsa varsayılan değerler kullan
