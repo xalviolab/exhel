@@ -45,7 +45,8 @@ export async function requireAuth() {
   const session = await getSession()
 
   if (!session) {
-    redirect("/login")
+    // Instead of redirecting here, return null
+    return null;
   }
 
   // Kullanıcı oturum açtığında durumunu güncelle
