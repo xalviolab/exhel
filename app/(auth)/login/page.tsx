@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Checkbox } from "@/components/ui/checkbox"
 import { Heart } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 
@@ -19,6 +20,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [rememberMe, setRememberMe] = useState(false)
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -88,6 +90,16 @@ export default function LoginPage() {
                 required
               />
             </div>
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="remember"
+                checked={rememberMe}
+                onCheckedChange={(checked) => setRememberMe(checked === true)}
+              />
+              <Label htmlFor="remember" className="text-sm font-normal">
+                Beni hatırla
+              </Label>
+            </div>
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? "Giriş Yapılıyor..." : "Giriş Yap"}
             </Button>
@@ -99,6 +111,17 @@ export default function LoginPage() {
             <Link href="/register" className="text-red-500 hover:underline">
               Kayıt Ol
             </Link>
+          </div>
+          <div className="mt-4 text-center text-xs text-muted-foreground">
+            Giriş yaparak{" "}
+            <Link href="/terms-of-service" className="text-primary hover:underline" target="_blank">
+              Kullanım Şartları
+            </Link>{" "}
+            ve{" "}
+            <Link href="/privacy-policy" className="text-primary hover:underline" target="_blank">
+              Gizlilik Politikası
+            </Link>
+            'nı kabul etmiş olursunuz.
           </div>
         </CardFooter>
       </Card>
