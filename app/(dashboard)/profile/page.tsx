@@ -4,11 +4,11 @@ import { DashboardLayout } from "@/components/dashboard-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Award, Flame, Heart, TrendingUp, User } from "lucide-react"
+import { Award, Flame, Heart, TrendingUp, User, CheckCircle2, XCircle } from "lucide-react"
 import { cache } from "react"
 
 // Sayfayı dinamik olarak işaretle
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic"
 
 // Önbelleğe alma fonksiyonları
 const getCachedUserStats = cache(getUserStats)
@@ -33,6 +33,16 @@ export default async function ProfilePage() {
     const xpForCurrentLevel = user.xp - currentLevelXp
     const xpRequiredForNextLevel = nextLevelXp - currentLevelXp
     const xpProgress = Math.round((xpForCurrentLevel / xpRequiredForNextLevel) * 100)
+
+    // Doğruluk oranı hesaplama
+    const accuracyRate = userStats?.total_questions_answered
+      ? Math.round((userStats.correct_answers / userStats.total_questions_answered) * 100)
+      : 0
+
+    // Yanlış cevap sayısı hesaplama
+    const incorrectAnswers = userStats?.total_questions_answered
+      ? userStats.total_questions_answered - userStats.correct_answers
+      : 0
 
     return (
       <DashboardLayout>
@@ -111,12 +121,27 @@ export default async function ProfilePage() {
                     </div>
                     <div className="space-y-1">
                       <p className="text-sm text-muted-foreground">Doğruluk Oranı</p>
-                      <p className="text-2xl font-bold">
-                        {userStats?.total_questions_answered
-                          ? Math.round((userStats.correct_answers / userStats.total_questions_answered) * 100)
-                          : 0}
-                        %
-                      </p>
+                      <p className="text-2xl font-bold">{accuracyRate}%</p>
+                    </div>
+                  </div>
+
+                  <div className="pt-4 border-t">
+                    <h3 className="font-medium mb-3">Soru İstatistikleri</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="flex items-center gap-2 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                        <CheckCircle2 className="h-5 w-5 text-green-500" />
+                        <div>
+                          <p className="text-sm font-medium">Doğru Cevaplar</p>
+                          <p className="text-xl font-bold">{userStats?.correct_answers || 0}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
+                        <XCircle className="h-5 w-5 text-red-500" />
+                        <div>
+                          <p className="text-sm font-medium">Yanlış Cevaplar</p>
+                          <p className="text-xl font-bold">{incorrectAnswers}</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -133,15 +158,15 @@ export default async function ProfilePage() {
                   {userBadges && userBadges.length > 0 ? (
                     userBadges.map((badge: any) => (
                       <div key={badge.id} className="flex flex-col items-center text-center">
-                        <div className="flex h-16 w-16 items-center justify-center bg-muted mb-2">
+                        <div className="flex h-20 w-20 items-center justify-center mb-2">
                           {badge.badges && badge.badges.image_url ? (
                             <img
                               src={badge.badges.image_url || "/placeholder.svg"}
                               alt={badge.badges.name}
-                              className="max-h-16 max-w-16 object-contain"
+                              className="max-h-20 max-w-20 object-contain"
                             />
                           ) : (
-                            <Award className="h-8 w-8 text-primary" />
+                            <Award className="h-12 w-12 text-primary" />
                           )}
                         </div>
                         <h4 className="font-medium text-sm">{badge.badges?.name || "Rozet"}</h4>
