@@ -45,7 +45,7 @@ export async function uploadImage(file: File): Promise<string | null> {
     const supabase = createClient()
 
     // Varsayılan bucket adı
-    const bucketName = "cardioedu"
+    const bucketName = "edulogy"
 
     // Bucket'ı kontrol et ve gerekirse oluştur
     const bucketCreated = await createBucketIfNotExists(bucketName)
@@ -88,7 +88,7 @@ export async function deleteImage(url: string): Promise<boolean> {
     const supabase = createClient()
 
     // Varsayılan bucket adı
-    const bucketName = "cardioedu"
+    const bucketName = "edulogy"
 
     // Bucket'ı kontrol et ve gerekirse oluştur
     const bucketExists = await createBucketIfNotExists(bucketName)
