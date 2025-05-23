@@ -10,6 +10,7 @@ import Link from "next/link"
 import { BookOpen, Lock, ArrowRight, Filter } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { redirect } from "next/navigation"
 
 export default async function ModulesPage({
   searchParams,
@@ -18,6 +19,10 @@ export default async function ModulesPage({
 }) {
   const session = await requireAuth()
   const user = await getUserDetails()
+
+  if (!session) {
+    redirect("/login")
+  }
 
   if (!user) {
     return <div>Kullanıcı bilgileri yüklenemedi.</div>
