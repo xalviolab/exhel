@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Inter", Arial, Helvetica, sans-serif;
 }
 
 @layer utilities {
@@ -99,4 +99,76 @@ body {
 
 .prose .math {
   @apply overflow-x-auto;
+}
+
+/* Mobile app-like styling */
+.mobile-container {
+  @apply max-w-md mx-auto shadow-lg rounded-xl overflow-hidden;
+}
+
+.mobile-header {
+  @apply sticky top-0 z-40 backdrop-blur-sm bg-background/90 border-b;
+}
+
+.mobile-bottom-nav {
+  @apply fixed bottom-0 left-0 right-0 bg-background border-t z-50;
+}
+
+.mobile-content {
+  @apply pb-16 pt-16; /* Space for fixed header and bottom nav */
+}
+
+/* Animations */
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.slide-up {
+  animation: slideUp 0.3s ease-in-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Card hover effects */
+.card-hover {
+  @apply transition-all duration-300;
+}
+
+.card-hover:hover {
+  @apply shadow-md -translate-y-1;
+}
+
+/* Button animations */
+.btn-pulse {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+  }
 }
