@@ -164,7 +164,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
                 {Math.max(0, user.hearts)}/{user.max_hearts}
               </span>
               {Math.max(0, user.hearts) === 0 && (
-                <span className="text-xs ml-1 text-red-500">(24s içinde yenilenir)</span>
+                <span className="text-xs ml-1 text-blue-600">(24s içinde yenilenir)</span>
               )}
             </div>
           </div>

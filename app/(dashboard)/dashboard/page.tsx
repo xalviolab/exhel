@@ -226,7 +226,7 @@ export default async function DashboardPage() {
                 {Math.max(0, user.hearts)}/{user.max_hearts}
               </span>
               {Math.max(0, user.hearts) === 0 && (
-                <span className="text-xs ml-1 text-red-500">(24s içinde yenilenir)</span>
+                <span className="text-xs ml-1 text-blue-600">(24s içinde yenilenir)</span>
               )}
             </div>
             <div className="flex items-center gap-1 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 px-3 py-1.5 rounded-full">

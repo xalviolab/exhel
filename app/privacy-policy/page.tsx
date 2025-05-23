@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button"
 import { ArrowLeft } from "lucide-react"
 
 export const metadata = {
-  title: "Gizlilik Politikası - CardioEdu",
-  description: "CardioEdu platformu gizlilik politikası",
+  title: "Gizlilik Politikası - Edulogy",
+  description: "Edulogy platformu gizlilik politikası",
 }
 
 export default function PrivacyPolicyPage() {
@@ -26,12 +26,12 @@ export default function PrivacyPolicyPage() {
 
           <div className="prose dark:prose-invert max-w-none">
             <p className="lead">
-              Bu Gizlilik Politikası, CardioEdu platformunu kullanırken kişisel verilerinizin nasıl toplandığını,
+              Bu Gizlilik Politikası, Edulogy platformunu kullanırken kişisel verilerinizin nasıl toplandığını,
               kullanıldığını ve korunduğunu açıklar.
             </p>
 
             <h2>1. Toplanan Bilgiler</h2>
-            <p>CardioEdu olarak, aşağıdaki kişisel bilgileri toplayabiliriz:</p>
+            <p>Edulogy olarak, aşağıdaki kişisel bilgileri toplayabiliriz:</p>
             <ul>
               <li>
                 <strong>Hesap Bilgileri:</strong> Ad, soyad, e-posta adresi, şifre gibi kayıt sırasında sağladığınız
@@ -75,7 +75,7 @@ export default function PrivacyPolicyPage() {
                 sağlayıcılarla.
               </li>
               <li>
-                <strong>Yasal Gereklilikler:</strong> Yasal bir yükümlülüğe uymak, CardioEdu'nun haklarını veya
+                <strong>Yasal Gereklilikler:</strong> Yasal bir yükümlülüğe uymak, Edulogy'nin haklarını veya
                 güvenliğini korumak, yasadışı faaliyetleri önlemek veya soruşturmak için gerekli olduğunda.
               </li>
               <li>
@@ -126,8 +126,8 @@ export default function PrivacyPolicyPage() {
             </ul>
             <p>
               Bu haklarınızı kullanmak için{" "}
-              <a href="mailto:privacy@cardioedu.com" className="text-primary hover:underline">
-                privacy@cardioedu.com
+              <a href="mailto:privacy@edulogy.com" className="text-primary hover:underline">
+                privacy@edulogy.com
               </a>{" "}
               adresinden bizimle iletişime geçebilirsiniz.
             </p>
@@ -141,8 +141,8 @@ export default function PrivacyPolicyPage() {
             <h2>10. İletişim</h2>
             <p>
               Bu Gizlilik Politikası ile ilgili sorularınız veya endişeleriniz varsa,{" "}
-              <a href="mailto:privacy@cardioedu.com" className="text-primary hover:underline">
-                privacy@cardioedu.com
+              <a href="mailto:privacy@edulogy.com" className="text-primary hover:underline">
+                privacy@edulogy.com
               </a>{" "}
               adresinden bizimle iletişime geçebilirsiniz.
             </p>

@@ -38,8 +38,7 @@ export default function LoginPage() {
         throw error
       }
 
-      router.push("/dashboard")
-      router.refresh()
+      window.location.href = '/dashboard';
     } catch (error: any) {
       setError(error.message || "Giriş yapılırken bir hata oluştu.")
     } finally {
@@ -52,9 +51,9 @@ export default function LoginPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1 text-center">
           <div className="flex justify-center mb-2">
-            <Heart className="h-10 w-10 text-red-500" />
+            <Heart className="h-10 w-10 text-blue-600" />
           </div>
-          <CardTitle className="text-2xl font-bold">CardioEdu</CardTitle>
+          <CardTitle className="text-2xl font-bold">Edulogy</CardTitle>
           <CardDescription>Hesabınıza giriş yapın</CardDescription>
         </CardHeader>
         <CardContent>
@@ -78,7 +77,7 @@ export default function LoginPage() {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">Şifre</Label>
-                <Link href="/forgot-password" className="text-sm text-red-500 hover:underline">
+                <Link href="/forgot-password" className="text-sm text-blue-600 hover:underline">
                   Şifremi Unuttum
                 </Link>
               </div>
@@ -108,7 +107,7 @@ export default function LoginPage() {
         <CardFooter className="flex flex-col">
           <div className="text-center text-sm">
             Hesabınız yok mu?{" "}
-            <Link href="/register" className="text-red-500 hover:underline">
+            <Link href="/register" className="text-sm text-blue-600 hover:underline">
               Kayıt Ol
             </Link>
           </div>

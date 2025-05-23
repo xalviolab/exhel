@@ -8,7 +8,7 @@ import { CookieConsent } from "@/components/cookie-consent"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata = {
-  title: "CardioEdu - Kardiyoloji Eğitim Platformu",
+  title: "Edulogy - Kardiyoloji Eğitim Platformu",
   description: "Tıp öğrencileri ve sağlık profesyonelleri için interaktif kardiyoloji eğitim platformu",
   generator: "v0.dev",
 }

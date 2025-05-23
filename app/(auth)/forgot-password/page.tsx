@@ -50,9 +50,9 @@ export default function ForgotPasswordPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1 text-center">
           <div className="flex justify-center mb-2">
-            <Heart className="h-10 w-10 text-red-500" />
+            <Heart className="h-10 w-10 text-blue-600" />
           </div>
-          <CardTitle className="text-2xl font-bold">CardioEdu</CardTitle>
+          <CardTitle className="text-2xl font-bold">Edulogy</CardTitle>
           <CardDescription>Şifrenizi sıfırlamak için e-posta adresinizi girin</CardDescription>
         </CardHeader>
         <CardContent>
@@ -89,7 +89,7 @@ export default function ForgotPasswordPage() {
         </CardContent>
         <CardFooter className="flex flex-col">
           <div className="text-center text-sm">
-            <Link href="/login" className="text-red-500 hover:underline">
+            <Link href="/login" className="text-blue-600 hover:underline">
               Giriş sayfasına dön
             </Link>
           </div>

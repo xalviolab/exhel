@@ -34,7 +34,7 @@ export default async function AdminFeedbackPage() {
       case "neutral":
         return <Meh className="h-5 w-5 text-amber-500" />
       case "negative":
-        return <Frown className="h-5 w-5 text-red-500" />
+        return <Frown className="h-5 w-5 text-blue-600" />
       default:
         return <Meh className="h-5 w-5 text-gray-500" />
     }

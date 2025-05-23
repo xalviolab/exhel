@@ -69,9 +69,9 @@ export default function RegisterPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1 text-center">
           <div className="flex justify-center mb-2">
-            <Heart className="h-10 w-10 text-red-500" />
+            <Heart className="h-10 w-10 text-blue-600" />
           </div>
-          <CardTitle className="text-2xl font-bold">CardioEdu</CardTitle>
+          <CardTitle className="text-2xl font-bold">Edulogy</CardTitle>
           <CardDescription>Yeni bir hesap oluşturun</CardDescription>
         </CardHeader>
         <CardContent>
@@ -147,7 +147,7 @@ export default function RegisterPage() {
         <CardFooter className="flex flex-col">
           <div className="text-center text-sm">
             Zaten hesabınız var mı?{" "}
-            <Link href="/login" className="text-red-500 hover:underline">
+            <Link href="/login" className="text-sm text-blue-600 hover:underline">
               Giriş Yap
             </Link>
           </div>

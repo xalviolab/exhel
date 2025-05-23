@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button"
 import { ArrowLeft } from "lucide-react"
 
 export const metadata = {
-  title: "Kullanım Şartları - CardioEdu",
-  description: "CardioEdu platformu kullanım şartları ve koşulları",
+  title: "Kullanım Şartları - Edulogy",
+  description: "Edulogy platformu kullanım şartları ve koşulları",
 }
 
 export default function TermsOfServicePage() {
@@ -26,13 +26,13 @@ export default function TermsOfServicePage() {
 
           <div className="prose dark:prose-invert max-w-none">
             <p className="lead">
-              Bu Kullanım Şartları, CardioEdu platformunu kullanımınızı düzenleyen koşulları içerir. Platformumuzu
+              Bu Kullanım Şartları, Edulogy platformunu kullanımınızı düzenleyen koşulları içerir. Platformumuzu
               kullanarak bu şartları kabul etmiş sayılırsınız.
             </p>
 
             <h2>1. Tanımlar</h2>
             <p>
-              <strong>"Platform"</strong> ifadesi, CardioEdu web sitesini, mobil uygulamasını ve ilgili tüm dijital
+              <strong>"Platform"</strong> ifadesi, Edulogy web sitesini, mobil uygulamasını ve ilgili tüm dijital
               hizmetleri kapsar.
               <br />
               <strong>"Kullanıcı"</strong> ifadesi, platformu kullanan herhangi bir kişiyi ifade eder.
@@ -63,17 +63,17 @@ export default function TermsOfServicePage() {
 
             <h2>4. İçerik ve Fikri Mülkiyet</h2>
             <p>
-              Platform üzerindeki tüm içerik, aksi belirtilmedikçe CardioEdu'nun veya lisans verenlerin mülkiyetindedir
+              Platform üzerindeki tüm içerik, aksi belirtilmedikçe Edulogy'nin veya lisans verenlerin mülkiyetindedir
               ve telif hakkı, ticari marka ve diğer fikri mülkiyet yasaları tarafından korunmaktadır.
             </p>
             <p>
               Platform'a yüklediğiniz içerikler için, bu içerikleri kullanma, düzenleme, paylaşma ve dağıtma hakkını
-              CardioEdu'ya vermiş olursunuz.
+              Edulogy'ye vermiş olursunuz.
             </p>
 
             <h2>5. Sorumluluk Reddi</h2>
             <p>
-              Platform "olduğu gibi" ve "mevcut olduğu şekliyle" sunulmaktadır. CardioEdu, Platform'un kesintisiz veya
+              Platform "olduğu gibi" ve "mevcut olduğu şekliyle" sunulmaktadır. Edulogy, Platform'un kesintisiz veya
               hatasız çalışacağını garanti etmez.
             </p>
             <p>
@@ -84,19 +84,19 @@ export default function TermsOfServicePage() {
 
             <h2>6. Sorumluluk Sınırlaması</h2>
             <p>
-              CardioEdu, Platform'un kullanımından kaynaklanan doğrudan, dolaylı, arızi, özel veya sonuç olarak ortaya
+              Edulogy, Platform'un kullanımından kaynaklanan doğrudan, dolaylı, arızi, özel veya sonuç olarak ortaya
               çıkan zararlardan sorumlu tutulamaz.
             </p>
 
             <h2>7. Değişiklikler</h2>
             <p>
-              CardioEdu, bu Kullanım Şartları'nı herhangi bir zamanda değiştirme hakkını saklı tutar. Değişiklikler,
+              Edulogy, bu Kullanım Şartları'nı herhangi bir zamanda değiştirme hakkını saklı tutar. Değişiklikler,
               Platform üzerinde yayınlandıktan sonra geçerli olacaktır.
             </p>
 
             <h2>8. Fesih</h2>
             <p>
-              CardioEdu, kendi takdirine bağlı olarak, herhangi bir zamanda ve herhangi bir nedenle, önceden bildirimde
+              Edulogy, kendi takdirine bağlı olarak, herhangi bir zamanda ve herhangi bir nedenle, önceden bildirimde
               bulunmaksızın hesabınızı askıya alabilir veya sonlandırabilir.
             </p>
 
@@ -106,8 +106,8 @@ export default function TermsOfServicePage() {
             <h2>10. İletişim</h2>
             <p>
               Bu Kullanım Şartları ile ilgili sorularınız için{" "}
-              <a href="mailto:info@cardioedu.com" className="text-primary hover:underline">
-                info@cardioedu.com
+              <a href="mailto:info@edulogy.com" className="text-primary hover:underline">
+                info@edulogy.com
               </a>{" "}
               adresinden bizimle iletişime geçebilirsiniz.
             </p>

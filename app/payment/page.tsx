@@ -229,7 +229,7 @@ export default function PaymentPage() {
                             <span className="font-medium">Banka:</span> Örnek Banka
                           </p>
                           <p>
-                            <span className="font-medium">Hesap Sahibi:</span> CardioEdu Eğitim Ltd. Şti.
+                            <span className="font-medium">Hesap Sahibi:</span> Edulogy Eğitim Ltd. Şti.
                           </p>
                           <p>
                             <span className="font-medium">IBAN:</span> TR12 3456 7890 1234 5678 9012 34
@@ -242,8 +242,8 @@ export default function PaymentPage() {
 
                       <p className="text-sm text-muted-foreground">
                         Ödemenizi yaptıktan sonra, ödeme dekontunuzu{" "}
-                        <a href="mailto:payments@cardioedu.com" className="text-primary hover:underline">
-                          payments@cardioedu.com
+                        <a href="mailto:payments@edulogy.com" className="text-primary hover:underline">
+                          payments@edulogy.com
                         </a>{" "}
                         adresine gönderebilirsiniz.
                       </p>
