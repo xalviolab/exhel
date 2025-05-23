@@ -1,8 +1,39 @@
-// Update the server-side Supabase client to handle missing environment variables
+// Supabase client'ı daha dayanıklı hale getirelim
 import { createServerComponentClient, createRouteHandlerClient } from "@supabase/auth-helpers-nextjs"
 import { cookies } from "next/headers"
 import type { Database } from "@/types/supabase"
 import { cache } from "react"
+
+// Dummy client to return when environment variables are missing
+const createDummyClient = () => {
+  return {
+    from: () => ({
+      select: () => ({
+        eq: () => ({
+          single: () => ({ data: null, error: { message: "Supabase client not initialized properly" } }),
+          order: () => ({ limit: () => ({ data: [], error: null }) }),
+        }),
+        order: () => ({ limit: () => ({ data: [], error: null }) }),
+      }),
+      insert: () => ({ data: null, error: { message: "Supabase client not initialized properly" } }),
+      update: () => ({ eq: () => ({ data: null, error: { message: "Supabase client not initialized properly" } }) }),
+      delete: () => ({ eq: () => ({ data: null, error: { message: "Supabase client not initialized properly" } }) }),
+    }),
+    auth: {
+      getSession: () => Promise.resolve({ data: { session: null }, error: null }),
+      signInWithPassword: () =>
+        Promise.resolve({ data: { session: null }, error: { message: "Authentication not available" } }),
+      signUp: () => Promise.resolve({ data: { user: null }, error: { message: "Authentication not available" } }),
+      signOut: () => Promise.resolve({ error: null }),
+    },
+    storage: {
+      from: () => ({
+        upload: () => Promise.resolve({ data: null, error: { message: "Storage not available" } }),
+        getPublicUrl: () => ({ data: { publicUrl: "" } }),
+      }),
+    },
+  } as any
+}
 
 // Check if environment variables are available
 const hasEnvVars = () => {
@@ -15,7 +46,7 @@ export const createServerClient = cache(() => {
     // Check if environment variables are available
     if (!hasEnvVars()) {
       console.error("Supabase environment variables are missing. Please check your .env file.")
-      throw new Error("Supabase environment variables are missing")
+      return createDummyClient()
     }
 
     const cookieStore = cookies()
@@ -30,17 +61,7 @@ export const createServerClient = cache(() => {
     })
   } catch (error) {
     console.error("Server client oluşturulurken hata:", error)
-    // Return a dummy client that will show appropriate errors
-    return {
-      from: () => ({
-        select: () => ({
-          eq: () => ({
-            single: () => ({ data: null, error: { message: "Supabase client not initialized properly" } }),
-          }),
-        }),
-      }),
-      auth: { getSession: () => Promise.resolve({ data: { session: null }, error: null }) },
-    } as any
+    return createDummyClient()
   }
 })
 
@@ -50,7 +71,7 @@ export const createServerActionClient = () => {
     // Check if environment variables are available
     if (!hasEnvVars()) {
       console.error("Supabase environment variables are missing. Please check your .env file.")
-      throw new Error("Supabase environment variables are missing")
+      return createDummyClient()
     }
 
     const cookieStore = cookies()
@@ -65,16 +86,6 @@ export const createServerActionClient = () => {
     })
   } catch (error) {
     console.error("Server action client oluşturulurken hata:", error)
-    // Return a dummy client that will show appropriate errors
-    return {
-      from: () => ({
-        select: () => ({
-          eq: () => ({
-            single: () => ({ data: null, error: { message: "Supabase client not initialized properly" } }),
-          }),
-        }),
-      }),
-      auth: { getSession: () => Promise.resolve({ data: { session: null }, error: null }) },
-    } as any
+    return createDummyClient()
   }
 }
