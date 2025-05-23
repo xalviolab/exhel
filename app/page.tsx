@@ -52,7 +52,7 @@ export default async function Home() {
                     Tıp Eğitiminde Yeni Nesil Öğrenme
                   </h1>
                   <p className="max-w-[600px] text-gray-500 md:text-xl dark:text-gray-400">
-                    Healision bünyesinde sunulan interaktif öğrenme deneyimi ile bilginizi geliştirin. Eğlenceli
+                    Edulogy bünyesinde sunulan interaktif öğrenme deneyimi ile bilginizi geliştirin. Eğlenceli
                     quizler, görsel içerikler ve gamification özellikleriyle öğrenmeyi keyifli hale getirin.
                   </p>
                 </div>
@@ -182,7 +182,7 @@ export default async function Home() {
                   <div className="inline-block rounded-lg bg-primary/10 px-3 py-1 text-sm text-primary">Hakkında</div>
                   <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">Tıp Eğitiminde Devrim</h2>
                   <p className="max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
-                    Edulogy, Healision bünyesinde tıp öğrencileri ve sağlık profesyonelleri için tasarlanmış, modern
+                    Edulogy, Edulogy bünyesinde tıp öğrencileri ve sağlık profesyonelleri için tasarlanmış, modern
                     öğrenme teknikleriyle tıp eğitimini daha etkili hale getiren bir platformdur.
                   </p>
                 </div>
@@ -344,7 +344,7 @@ export default async function Home() {
               <span className="text-lg font-bold">Edulogy</span>
             </div>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              © {new Date().getFullYear()} Healision. Tüm hakları saklıdır.
+              © {new Date().getFullYear()} Edulogy. Tüm hakları saklıdır.
             </p>
             <div className="flex gap-4">
               <Link href="/privacy-policy" className="text-sm text-gray-500 hover:underline dark:text-gray-400">
