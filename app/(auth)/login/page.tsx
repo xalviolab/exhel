@@ -38,7 +38,7 @@ export default function LoginPage() {
         throw error
       }
 
-      window.location.href = '/dashboard';
+      router.push('/dashboard');
     } catch (error: any) {
       setError(error.message || "Giriş yapılırken bir hata oluştu.")
     } finally {
