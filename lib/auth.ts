@@ -45,7 +45,8 @@ export async function requireAuth() {
   const session = await getSession()
 
   if (!session) {
-    // Instead of redirecting here, return null
+    // Oturum yoksa login sayfasına yönlendir
+    redirect("/login");
     return null;
   }
 
@@ -77,4 +78,3 @@ export async function requireAdmin() {
     redirect("/dashboard")
   }
 }
- 
