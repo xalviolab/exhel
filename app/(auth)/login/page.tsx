@@ -37,8 +37,15 @@ export default function LoginPage() {
       if (error) {
         throw error
       }
-
-      router.push('/dashboard');
+      
+      // Oturumun oluşturulduğunu doğrulayın
+      const { data: { session: newSession } } = await supabase.auth.getSession()
+      if (newSession) {
+        router.push('/dashboard')
+      } else {
+        // Oturum oluşturulmadıysa hata gösterin
+        setError("Oturum oluşturulamadı, lütfen tekrar deneyin.")
+      }
     } catch (error: any) {
       setError(error.message || "Giriş yapılırken bir hata oluştu.")
     } finally {
