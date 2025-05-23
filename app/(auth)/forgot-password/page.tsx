@@ -25,10 +25,13 @@ export default function ForgotPasswordPage() {
     setSuccess(false)
 
     try {
-      const supabase = createClient()
+      const supabase = createClient();
+      // Construct the redirect URL only on the client side
+      const redirectUrl = typeof window !== 'undefined' ? `${window.location.origin}/reset-password` : '/reset-password';
+
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password`,
-      })
+        redirectTo: redirectUrl,
+      });
 
       if (error) {
         throw error
