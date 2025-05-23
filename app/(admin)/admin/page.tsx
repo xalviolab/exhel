@@ -3,9 +3,14 @@ import { AdminLayout } from "@/components/admin-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { getAllUsers } from "@/lib/db"
 import { Users, BookOpen, Award, HelpCircle } from "lucide-react"
+import { redirect } from "next/navigation"
 
 export default async function AdminDashboardPage() {
-  await requireAdmin()
+  const session = await requireAdmin()
+
+  if (!session) {
+    redirect("/login")
+  }
 
   const users = await getAllUsers()
 
