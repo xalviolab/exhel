@@ -1,14 +1,21 @@
+// Update the landing page with new branding and color scheme
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { getSession } from "@/lib/auth"
-import { Heart, Activity, Award, BookOpen, Users, ArrowRight, CheckCircle, AlertTriangle } from "lucide-react"
+import { BookOpen, Activity, Award, Users, ArrowRight, CheckCircle, AlertTriangle, GraduationCap } from "lucide-react"
 import { DisclaimerDialog } from "@/components/disclaimer-dialog"
 
 // Sayfayı dinamik olarak işaretle
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic"
 
 export default async function Home() {
-  const session = await getSession()
+  let session = null
+
+  try {
+    session = await getSession()
+  } catch (error) {
+    console.error("Session alınırken hata:", error)
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -16,9 +23,9 @@ export default async function Home() {
       <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center gap-2">
-            <Heart className="h-6 w-6 text-red-500" />
-            <span className="text-lg font-bold">CardioEdu</span>
-            <span className="inline-flex items-center gap-1 bg-amber-200 dark:bg-amber-900 text-amber-800 dark:text-amber-200 px-2 py-0.5 rounded-full text-xs font-semibold">
+            <GraduationCap className="h-6 w-6 text-blue-600" />
+            <span className="text-lg font-bold">Edulogy</span>
+            <span className="inline-flex items-center gap-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-0.5 rounded-full text-xs font-semibold">
               <AlertTriangle className="h-3 w-3" />
               Beta Sürümü
             </span>
@@ -53,16 +60,16 @@ export default async function Home() {
         </div>
       </header>
       <main className="flex-1">
-        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-gray-800">
+        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-gradient-to-b from-white to-blue-50 dark:from-gray-900 dark:to-blue-950">
           <div className="container px-4 md:px-6 mx-auto">
             <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 xl:grid-cols-2 items-center">
               <div className="flex flex-col justify-center space-y-4">
                 <div className="space-y-2">
                   <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                    Kardiyoloji Eğitiminde Yeni Nesil Öğrenme
+                    Tıp Eğitiminde Yeni Nesil Öğrenme
                   </h1>
                   <p className="max-w-[600px] text-gray-500 md:text-xl dark:text-gray-400">
-                    İnteraktif öğrenme deneyimi ile bilginizi geliştirin. Eğlenceli
+                    Healision bünyesinde sunulan interaktif öğrenme deneyimi ile bilginizi geliştirin. Eğlenceli
                     quizler, görsel içerikler ve gamification özellikleriyle öğrenmeyi keyifli hale getirin.
                   </p>
                 </div>
@@ -79,14 +86,14 @@ export default async function Home() {
                 </div>
               </div>
               <div className="hidden lg:block relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-red-500 to-red-600 rounded-lg transform rotate-2 opacity-10"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg transform rotate-2 opacity-10"></div>
                 <div className="relative bg-white dark:bg-gray-950 border rounded-lg shadow-lg p-6">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
-                      <Heart className="h-6 w-6 text-red-500" />
+                      <GraduationCap className="h-6 w-6 text-blue-600" />
                       <span className="font-bold">Günlük Hedef</span>
                     </div>
-                    <div className="bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                    <div className="bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-xs font-medium px-2.5 py-0.5 rounded-full">
                       2/3 Tamamlandı
                     </div>
                   </div>
@@ -139,21 +146,21 @@ export default async function Home() {
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <div className="inline-block rounded-lg bg-primary/10 px-3 py-1 text-sm text-primary">Özellikler</div>
-                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">Neden CardioEdu?</h2>
+                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">Neden Edulogy?</h2>
                 <p className="max-w-[900px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
-                  Kardiyoloji eğitimini daha etkili ve eğlenceli hale getiren özelliklerle donatılmış platform
+                  Tıp eğitimini daha etkili ve eğlenceli hale getiren özelliklerle donatılmış platform
                 </p>
               </div>
             </div>
             <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-3 lg:gap-12">
               <div className="flex flex-col justify-center space-y-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-red-100 text-red-500 dark:bg-red-900/20 dark:text-red-400">
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100 text-blue-500 dark:bg-blue-900/20 dark:text-blue-400">
                   <BookOpen className="h-6 w-6" />
                 </div>
                 <div className="space-y-2">
                   <h3 className="text-xl font-bold">Modüler Öğrenme</h3>
                   <p className="text-gray-500 dark:text-gray-400">
-                    Kardiyoloji konularını küçük, sindirilebilir modüllere ayırarak adım adım öğrenin.
+                    Tıp konularını küçük, sindirilebilir modüllere ayırarak adım adım öğrenin.
                   </p>
                 </div>
               </div>
@@ -169,7 +176,7 @@ export default async function Home() {
                 </div>
               </div>
               <div className="flex flex-col justify-center space-y-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-900/20 dark:text-green-400">
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100 text-blue-500 dark:bg-blue-900/20 dark:text-blue-400">
                   <Activity className="h-6 w-6" />
                 </div>
                 <div className="space-y-2">
@@ -183,16 +190,16 @@ export default async function Home() {
           </div>
         </section>
 
-        <section id="about" className="w-full py-12 md:py-24 lg:py-32 bg-gray-100 dark:bg-gray-800">
+        <section id="about" className="w-full py-12 md:py-24 lg:py-32 bg-blue-50 dark:bg-navy-900">
           <div className="container px-4 md:px-6 mx-auto">
             <div className="grid gap-6 lg:grid-cols-2 lg:gap-12">
               <div className="flex flex-col justify-center space-y-4">
                 <div className="space-y-2">
                   <div className="inline-block rounded-lg bg-primary/10 px-3 py-1 text-sm text-primary">Hakkında</div>
-                  <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">Kardiyoloji Eğitiminde Devrim</h2>
+                  <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">Tıp Eğitiminde Devrim</h2>
                   <p className="max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
-                    CardioEdu, tıp öğrencileri ve sağlık profesyonelleri için tasarlanmış, modern öğrenme teknikleriyle
-                    kardiyoloji eğitimini daha etkili hale getiren bir platformdur.
+                    Edulogy, Healision bünyesinde tıp öğrencileri ve sağlık profesyonelleri için tasarlanmış, modern
+                    öğrenme teknikleriyle tıp eğitimini daha etkili hale getiren bir platformdur.
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
@@ -209,7 +216,7 @@ export default async function Home() {
                     </div>
                     <h3 className="text-xl font-bold">Tıp Öğrencileri İçin</h3>
                     <p className="text-gray-500 dark:text-gray-400 mt-2">
-                      Kardiyoloji derslerinizi destekleyecek interaktif içerikler
+                      Tıp derslerinizi destekleyecek interaktif içerikler
                     </p>
                   </div>
                   <div className="rounded-lg bg-white p-6 shadow-lg dark:bg-gray-950">
@@ -218,7 +225,7 @@ export default async function Home() {
                     </div>
                     <h3 className="text-xl font-bold">Pratik Yapın</h3>
                     <p className="text-gray-500 dark:text-gray-400 mt-2">
-                      EKG okuma ve vaka analizleri ile pratik yapma imkanı
+                      Vaka analizleri ve interaktif sorularla pratik yapma imkanı
                     </p>
                   </div>
                 </div>
@@ -229,7 +236,7 @@ export default async function Home() {
                     </div>
                     <h3 className="text-xl font-bold">Kapsamlı İçerik</h3>
                     <p className="text-gray-500 dark:text-gray-400 mt-2">
-                      Temel kardiyolojiden ileri konulara kadar geniş içerik
+                      Temel tıp bilimlerinden klinik konulara kadar geniş içerik
                     </p>
                   </div>
                   <div className="rounded-lg bg-white p-6 shadow-lg dark:bg-gray-950">
@@ -256,7 +263,7 @@ export default async function Home() {
                 </div>
                 <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">Planlar ve Fiyatlandırma</h2>
                 <p className="max-w-[900px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
-                  İhtiyaçlarınıza uygun planı seçin ve kardiyoloji eğitiminizi bir üst seviyeye taşıyın.
+                  İhtiyaçlarınıza uygun planı seçin ve tıp eğitiminizi bir üst seviyeye taşıyın.
                 </p>
               </div>
             </div>
@@ -345,15 +352,15 @@ export default async function Home() {
           </div>
         </section>
       </main>
-      <footer className="w-full border-t py-6 bg-gray-100 dark:bg-gray-800">
+      <footer className="w-full border-t py-6 bg-blue-50 dark:bg-navy-900">
         <div className="container px-4 md:px-6 mx-auto">
           <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
             <div className="flex items-center gap-2">
-              <Heart className="h-6 w-6 text-red-500" />
-              <span className="text-lg font-bold">CardioEdu</span>
+              <GraduationCap className="h-6 w-6 text-blue-600" />
+              <span className="text-lg font-bold">Edulogy</span>
             </div>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              © {new Date().getFullYear()} CardioEdu. Tüm hakları saklıdır.
+              © {new Date().getFullYear()} Healision. Tüm hakları saklıdır.
             </p>
             <div className="flex gap-4">
               <Link href="#" className="text-sm text-gray-500 hover:underline dark:text-gray-400">
