@@ -1,7 +1,7 @@
 // Update the landing page with better error handling
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Activity, ArrowRight, CheckCircle, AlertTriangle, GraduationCap } from "lucide-react"
+import { Activity, ArrowRight, CheckCircle, AlertTriangle, GraduationCap, BookOpen, Award, Users } from "lucide-react"
 import { DisclaimerDialog } from "@/components/disclaimer-dialog"
 
 // Sayfayı dinamik olarak işaretle
@@ -280,84 +280,5 @@ export default async function Home() {
                 <div>
                   <h3 className="text-xl font-bold">Premium</h3>
                   <div className="mt-4 text-3xl font-bold">
-                    ₺49.99<span className="text-sm font-normal text-gray-500 dark:text-gray-400">/ay</span>
-                  </div>
-                  <p className="mt-2 text-gray-500 dark:text-gray-400">Daha fazla içerik ve özellik</p>
-                  <ul className="mt-4 space-y-2 text-sm text-gray-500 dark:text-gray-400">
-                    <li className="flex items-center">
-                      <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
-                      Tüm modüllere erişim
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
-                      Sınırsız kalp
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
-                      Detaylı istatistikler
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
-                      Özel rozetler
-                    </li>
-                  </ul>
-                </div>
-                <Button className="mt-6">Premium'a Yükselt</Button>
-              </div>
-              <div className="flex flex-col justify-between rounded-lg border bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-950 transition-transform duration-300 hover:-translate-y-1 hover:shadow-md">
-                <div>
-                  <h3 className="text-xl font-bold">Kurumsal</h3>
-                  <div className="mt-4 text-3xl font-bold">Özel Fiyat</div>
-                  <p className="mt-2 text-gray-500 dark:text-gray-400">Kurumunuza özel çözümler</p>
-                  <ul className="mt-4 space-y-2 text-sm text-gray-500 dark:text-gray-400">
-                    <li className="flex items-center">
-                      <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
-                      Tüm Premium özellikleri
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
-                      Özel içerik geliştirme
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
-                      Kurumsal yönetim paneli
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
-                      7/24 destek
-                    </li>
-                  </ul>
-                </div>
-                <Button className="mt-6" variant="outline">
-                  İletişime Geç
-                </Button>
-              </div>
-            </div>
-          </div>
-        </section>
-      </main>
-      <footer className="w-full border-t py-6 bg-blue-50 dark:bg-navy-900">
-        <div className="container px-4 md:px-6 mx-auto">
-          <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-            <div className="flex items-center gap-2">
-              <GraduationCap className="h-6 w-6 text-blue-600" />
-              <span className="text-lg font-bold">Edulogy</span>
-            </div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              © {new Date().getFullYear()} Edulogy. Tüm hakları saklıdır.
-            </p>
-            <div className="flex gap-4">
-              <Link href="/privacy-policy" className="text-sm text-gray-500 hover:underline dark:text-gray-400">
-                Gizlilik Politikası
-              </Link>
-              <Link href="/terms-of-service" className="text-sm text-gray-500 hover:underline dark:text-gray-400">
-                Kullanım Şartları
-              </Link>
-            </div>
-          </div>
-        </div>
-      </footer>
-    </div>
-  )
-}
-
+ 
+(Content truncated due to size limit. Use line ranges to read in chunks)
