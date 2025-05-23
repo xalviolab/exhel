@@ -22,6 +22,10 @@ export default async function LessonPage({ params }: LessonPageProps) {
   const session = await requireAuth()
   const user = await getUserDetails()
 
+  if (!session) {
+    redirect("/login")
+  }
+
   if (!user) {
     return <div>Kullanıcı bilgileri yüklenemedi.</div>
   }
