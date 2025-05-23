@@ -40,16 +40,21 @@ const hasEnvVars = () => {
   return !!process.env.NEXT_PUBLIC_SUPABASE_URL && !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 }
 
+// Ensure cookies are accessed within the async context
+const getCookieStore = async () => {
+  return cookies();
+};
+
 // Server component client (cached)
-export const createServerClient = cache(() => {
+export const createServerClient = cache(async () => {
   try {
     // Check if environment variables are available
     if (!hasEnvVars()) {
-      console.error("Supabase environment variables are missing. Please check your .env file.")
-      return createDummyClient()
+      console.error("Supabase environment variables are missing. Please check your .env file.");
+      return createDummyClient();
     }
 
-    const cookieStore = cookies()
+    const cookieStore = await getCookieStore();
     return createServerComponentClient<Database>({
       cookies: () => cookieStore,
       options: {
@@ -58,23 +63,23 @@ export const createServerClient = cache(() => {
           autoRefreshToken: true,
         },
       },
-    })
+    });
   } catch (error) {
-    console.error("Server client oluşturulurken hata:", error)
-    return createDummyClient()
+    console.error("Server client oluşturulurken hata:", error);
+    return createDummyClient();
   }
-})
+});
 
 // Route handler client (for API routes)
-export const createServerActionClient = () => {
+export const createServerActionClient = async () => {
   try {
     // Check if environment variables are available
     if (!hasEnvVars()) {
-      console.error("Supabase environment variables are missing. Please check your .env file.")
-      return createDummyClient()
+      console.error("Supabase environment variables are missing. Please check your .env file.");
+      return createDummyClient();
     }
 
-    const cookieStore = cookies()
+    const cookieStore = await getCookieStore();
     return createRouteHandlerClient<Database>({
       cookies: () => cookieStore,
       options: {
@@ -83,9 +88,9 @@ export const createServerActionClient = () => {
           autoRefreshToken: true,
         },
       },
-    })
+    });
   } catch (error) {
-    console.error("Server action client oluşturulurken hata:", error)
-    return createDummyClient()
+    console.error("Server action client oluşturulurken hata:", error);
+    return createDummyClient();
   }
-}
+};
