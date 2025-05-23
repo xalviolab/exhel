@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { requireAdmin } from "@/lib/auth"
 import { AdminLayout } from "@/components/admin-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
