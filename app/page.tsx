@@ -1,22 +1,13 @@
-// Update the landing page with new branding and color scheme
+// Update the landing page with better error handling
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { getSession } from "@/lib/auth"
-import { BookOpen, Activity, Award, Users, ArrowRight, CheckCircle, AlertTriangle, GraduationCap } from "lucide-react"
+import { Activity, ArrowRight, CheckCircle, AlertTriangle, GraduationCap } from "lucide-react"
 import { DisclaimerDialog } from "@/components/disclaimer-dialog"
 
 // Sayfayı dinamik olarak işaretle
 export const dynamic = "force-dynamic"
 
 export default async function Home() {
-  let session = null
-
-  try {
-    session = await getSession()
-  } catch (error) {
-    console.error("Session alınırken hata:", error)
-  }
-
   return (
     <div className="flex flex-col min-h-screen">
       <DisclaimerDialog />
@@ -42,20 +33,12 @@ export default async function Home() {
             </Link>
           </nav>
           <div className="flex items-center gap-4">
-            {session ? (
-              <Button asChild>
-                <Link href="/dashboard">Dashboard</Link>
-              </Button>
-            ) : (
-              <>
-                <Button asChild variant="ghost" className="hidden sm:flex">
-                  <Link href="/login">Giriş Yap</Link>
-                </Button>
-                <Button asChild>
-                  <Link href="/register">Kayıt Ol</Link>
-                </Button>
-              </>
-            )}
+            <Button asChild variant="ghost" className="hidden sm:flex">
+              <Link href="/login">Giriş Yap</Link>
+            </Button>
+            <Button asChild>
+              <Link href="/register">Kayıt Ol</Link>
+            </Button>
           </div>
         </div>
       </header>
@@ -140,6 +123,7 @@ export default async function Home() {
             </div>
           </div>
         </section>
+
 
         <section id="features" className="w-full py-12 md:py-24 lg:py-32 bg-white dark:bg-gray-950">
           <div className="container px-4 md:px-6 mx-auto">
@@ -363,10 +347,10 @@ export default async function Home() {
               © {new Date().getFullYear()} Healision. Tüm hakları saklıdır.
             </p>
             <div className="flex gap-4">
-              <Link href="#" className="text-sm text-gray-500 hover:underline dark:text-gray-400">
+              <Link href="/privacy-policy" className="text-sm text-gray-500 hover:underline dark:text-gray-400">
                 Gizlilik Politikası
               </Link>
-              <Link href="#" className="text-sm text-gray-500 hover:underline dark:text-gray-400">
+              <Link href="/terms-of-service" className="text-sm text-gray-500 hover:underline dark:text-gray-400">
                 Kullanım Şartları
               </Link>
             </div>
@@ -376,3 +360,4 @@ export default async function Home() {
     </div>
   )
 }
+
