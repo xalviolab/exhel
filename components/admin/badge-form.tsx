@@ -153,14 +153,18 @@ export function BadgeForm({ badgeId, type, defaultValues, children }: BadgeFormP
                     id="image_url"
                     value={imageUrl}
                     onChange={(e) => setImageUrl(e.target.value)}
-                    placeholder="https://example.com/image.jpg"
+                    placeholder="https://example.com/image.svg"
                   />
                 </TabsContent>
               </Tabs>
               {imageUrl && (
                 <div className="mt-2 flex items-center justify-center">
-                  <div className="relative h-24 w-24 overflow-hidden rounded-full border-2 border-muted">
-                    <img src={imageUrl} alt="Rozet görseli" className="h-full w-full object-cover" />
+                  <div className="relative h-24 w-24 overflow-hidden">
+                    <img
+                      src={imageUrl || "/placeholder.svg"}
+                      alt="Rozet görseli"
+                      className="h-full w-full object-contain"
+                    />
                   </div>
                 </div>
               )}
