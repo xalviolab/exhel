@@ -52,7 +52,7 @@ export default async function Home() {
                     Tıp Eğitiminde Yeni Nesil Öğrenme
                   </h1>
                   <p className="max-w-[600px] text-gray-500 md:text-xl dark:text-gray-400">
-                    Edulogy bünyesinde sunulan interaktif öğrenme deneyimi ile bilginizi geliştirin. Eğlenceli
+                    Edulogy bünyesinde sunulan interaktif öğrenme deneyimi ile bilginizi geliştirin. Eğlenceli 
                     quizler, görsel içerikler ve gamification özellikleriyle öğrenmeyi keyifli hale getirin.
                   </p>
                 </div>
