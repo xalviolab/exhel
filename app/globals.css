@@ -14,14 +14,22 @@ body {
 
 @layer base {
   :root {
-    --background: 0 0% 100%; /* ivory white */
-    --foreground: 220 20% 20%; /* dark blue-grey */
-    --card: 0 0% 100%; /* ivory white */
-    --card-foreground: 220 20% 20%; /* dark blue-grey */
-    --popover: 0 0% 100%; /* ivory white */
-    --popover-foreground: 220 20% 20%; /* dark blue-grey */
-    --primary: 210 90% 60%; /* light blue */
-    --primary-foreground: 0 0% 100%; /* ivory white */
+    --background: 0 0% 100%;
+    /* ivory white */
+    --foreground: 220 20% 20%;
+    /* dark blue-grey */
+    --card: 0 0% 100%;
+    /* ivory white */
+    --card-foreground: 220 20% 20%;
+    /* dark blue-grey */
+    --popover: 0 0% 100%;
+    /* ivory white */
+    --popover-foreground: 220 20% 20%;
+    /* dark blue-grey */
+    --primary: 210 90% 60%;
+    /* light blue */
+    --primary-foreground: 0 0% 100%;
+    /* ivory white */
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
     --muted: 210 40% 96.1%;
@@ -32,27 +40,44 @@ body {
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 210 90% 60%; /* light blue */
+    --ring: 210 90% 60%;
+    /* light blue */
     --radius: 0.5rem;
-    --sidebar-background: 220 20% 25%; /* dark blue-grey variant */
-    --sidebar-foreground: 0 0% 98%; /* light grey */
-    --sidebar-primary: 210 90% 60%; /* light blue */
-    --sidebar-primary-foreground: 0 0% 100%; /* ivory white */
-    --sidebar-accent: 220 20% 30%; /* dark blue-grey variant */
-    --sidebar-accent-foreground: 0 0% 98%; /* light grey */
-    --sidebar-border: 220 20% 35%; /* dark blue-grey variant */
-    --sidebar-ring: 210 90% 60%; /* light blue */
+    --sidebar-background: 220 20% 25%;
+    /* dark blue-grey variant */
+    --sidebar-foreground: 0 0% 98%;
+    /* light grey */
+    --sidebar-primary: 210 90% 60%;
+    /* light blue */
+    --sidebar-primary-foreground: 0 0% 100%;
+    /* ivory white */
+    --sidebar-accent: 220 20% 30%;
+    /* dark blue-grey variant */
+    --sidebar-accent-foreground: 0 0% 98%;
+    /* light grey */
+    --sidebar-border: 220 20% 35%;
+    /* dark blue-grey variant */
+    --sidebar-ring: 210 90% 60%;
+    /* light blue */
   }
 
   .dark {
-    --background: 220 20% 10%; /* darker blue-grey */
-    --foreground: 0 0% 95%; /* light ivory white */
-    --card: 220 20% 10%; /* darker blue-grey */
-    --card-foreground: 0 0% 95%; /* light ivory white */
-    --popover: 220 20% 10%; /* darker blue-grey */
-    --popover-foreground: 0 0% 95%; /* light ivory white */
-    --primary: 210 90% 70%; /* lighter blue */
-    --primary-foreground: 220 20% 20%; /* dark blue-grey */
+    --background: 220 20% 10%;
+    /* darker blue-grey */
+    --foreground: 0 0% 95%;
+    /* light ivory white */
+    --card: 220 20% 10%;
+    /* darker blue-grey */
+    --card-foreground: 0 0% 95%;
+    /* light ivory white */
+    --popover: 220 20% 10%;
+    /* darker blue-grey */
+    --popover-foreground: 0 0% 95%;
+    /* light ivory white */
+    --primary: 210 90% 70%;
+    /* lighter blue */
+    --primary-foreground: 220 20% 20%;
+    /* dark blue-grey */
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
     --muted: 217.2 32.6% 17.5%;
@@ -63,20 +88,29 @@ body {
     --destructive-foreground: 210 40% 98%;
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 210 90% 70%; /* lighter blue */
+    --ring: 210 90% 70%;
+    /* lighter blue */
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
-    --sidebar-background: 220 20% 15%; /* darker blue-grey variant */
-    --sidebar-foreground: 0 0% 95%; /* light ivory white */
-    --sidebar-primary: 210 90% 70%; /* lighter blue */
-    --sidebar-primary-foreground: 220 20% 10%; /* darker blue-grey */
-    --sidebar-accent: 220 20% 20%; /* darker blue-grey variant */
-    --sidebar-accent-foreground: 0 0% 95%; /* light ivory white */
-    --sidebar-border: 220 20% 25%; /* darker blue-grey variant */
-    --sidebar-ring: 210 90% 70%; /* lighter blue */
+    --sidebar-background: 220 20% 15%;
+    /* darker blue-grey variant */
+    --sidebar-foreground: 0 0% 95%;
+    /* light ivory white */
+    --sidebar-primary: 210 90% 70%;
+    /* lighter blue */
+    --sidebar-primary-foreground: 220 20% 10%;
+    /* darker blue-grey */
+    --sidebar-accent: 220 20% 20%;
+    /* darker blue-grey variant */
+    --sidebar-accent-foreground: 0 0% 95%;
+    /* light ivory white */
+    --sidebar-border: 220 20% 25%;
+    /* darker blue-grey variant */
+    --sidebar-ring: 210 90% 70%;
+    /* lighter blue */
   }
 }
 
@@ -84,6 +118,7 @@ body {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -115,7 +150,8 @@ body {
 }
 
 .mobile-content {
-  @apply pb-16 pt-16; /* Space for fixed header and bottom nav */
+  @apply pb-16 pt-16;
+  /* Space for fixed header and bottom nav */
 }
 
 /* Animations */
@@ -127,6 +163,7 @@ body {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -141,6 +178,7 @@ body {
     transform: translateY(20px);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -165,9 +203,11 @@ body {
   0% {
     box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
   }
+
   70% {
     box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
   }
+
   100% {
     box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
   }

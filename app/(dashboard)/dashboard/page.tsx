@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { getUserDetails, requireAuth } from "@/lib/auth"
 import { DashboardLayout } from "@/components/dashboard-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"

@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { getUserDetails, requireAuth } from "@/lib/auth"
 import { getUserBadges } from "@/lib/db"
 import { DashboardLayout } from "@/components/dashboard-layout"
