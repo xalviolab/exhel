@@ -3,33 +3,28 @@
 import type React from "react"
 
 import { useState, useRef } from "react"
-import { uploadImage } from "@/lib/storage"
-import { ImageIcon, LinkIcon } from "lucide-react"
-import { useToast } from "@/components/ui/use-toast"
-import { cn } from "@/lib/utils"
-import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Upload, X, ImageIcon } from "lucide-react"
+import { useToast } from "@/components/ui/use-toast"
 
 interface ImageUploadProps {
   onImageUploaded: (url: string) => void
+  acceptedTypes?: string
   className?: string
+  currentImage?: string
 }
 
-export function ImageUpload({ onImageUploaded, className }: ImageUploadProps) {
+export function ImageUpload({ onImageUploaded, acceptedTypes, className, currentImage }: ImageUploadProps) {
   const [isUploading, setIsUploading] = useState(false)
-  const [dragActive, setDragActive] = useState(false)
-  const [imageUrl, setImageUrl] = useState("")
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
+  const [previewUrl, setPreviewUrl] = useState<string | null>(currentImage || null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const { toast } = useToast()
 
-  const handleFileChange = async (files: FileList | null) => {
-    if (!files || files.length === 0) return
+  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
 
-    const file = files[0]
-
-    // Dosya türünü kontrol et
+    // Dosya türü kontrolü
     if (!file.type.startsWith("image/")) {
       toast({
         title: "Hata",
@@ -39,11 +34,11 @@ export function ImageUpload({ onImageUploaded, className }: ImageUploadProps) {
       return
     }
 
-    // Dosya boyutunu kontrol et (2MB)
-    if (file.size > 2 * 1024 * 1024) {
+    // Dosya boyutu kontrolü (5MB)
+    if (file.size > 5 * 1024 * 1024) {
       toast({
         title: "Hata",
-        description: "Dosya boyutu 2MB'dan küçük olmalıdır.",
+        description: "Dosya boyutu 5MB'dan küçük olmalıdır.",
         variant: "destructive",
       })
       return
@@ -52,175 +47,95 @@ export function ImageUpload({ onImageUploaded, className }: ImageUploadProps) {
     setIsUploading(true)
 
     try {
-      const url = await uploadImage(file)
+      // Dosyayı base64'e çevir
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        const result = e.target?.result as string
+        setPreviewUrl(result)
+        onImageUploaded(result)
 
-      if (url) {
-        setPreviewUrl(url)
-        onImageUploaded(url)
         toast({
           title: "Başarılı",
           description: "Görsel başarıyla yüklendi.",
         })
-      } else {
-        throw new Error("Görsel yüklenemedi.")
       }
+      reader.readAsDataURL(file)
     } catch (error: any) {
+      console.error("Upload error:", error)
       toast({
         title: "Hata",
-        description: error.message || "Görsel yüklenirken bir hata oluştu.",
+        description: "Görsel yüklenirken bir hata oluştu.",
         variant: "destructive",
       })
+      setPreviewUrl(null)
     } finally {
       setIsUploading(false)
-      // Input değerini sıfırla
-      if (inputRef.current) {
-        inputRef.current.value = ""
-      }
     }
   }
 
-  const handleUrlSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-
-    if (!imageUrl) {
-      toast({
-        title: "Hata",
-        description: "Lütfen bir görsel URL'i girin.",
-        variant: "destructive",
-      })
-      return
-    }
-
-    // URL formatını kontrol et
-    try {
-      new URL(imageUrl)
-    } catch (error) {
-      toast({
-        title: "Hata",
-        description: "Lütfen geçerli bir URL girin.",
-        variant: "destructive",
-      })
-      return
-    }
-
-    setPreviewUrl(imageUrl)
-    onImageUploaded(imageUrl)
-    toast({
-      title: "Başarılı",
-      description: "Görsel başarıyla eklendi.",
-    })
-    setImageUrl("")
-  }
-
-  const handleDrag = (e: React.DragEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-
-    if (e.type === "dragenter" || e.type === "dragover") {
-      setDragActive(true)
-    } else if (e.type === "dragleave") {
-      setDragActive(false)
-    }
-  }
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setDragActive(false)
-
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      handleFileChange(e.dataTransfer.files)
+  const handleRemoveImage = () => {
+    setPreviewUrl(null)
+    onImageUploaded("")
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ""
     }
   }
 
   const handleButtonClick = () => {
-    inputRef.current?.click()
+    fileInputRef.current?.click()
   }
 
   return (
-    <div className={cn("space-y-4", className)}>
-      <Tabs defaultValue="upload" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="upload">Dosya Yükle</TabsTrigger>
-          <TabsTrigger value="url">URL Ekle</TabsTrigger>
-        </TabsList>
+    <div className={`space-y-4 ${className || ""}`}>
+      <div className="flex items-center gap-4">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={handleButtonClick}
+          disabled={isUploading}
+          className="flex items-center gap-2"
+        >
+          {isUploading ? (
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
+          ) : (
+            <Upload className="h-4 w-4" />
+          )}
+          {isUploading ? "Yükleniyor..." : "Görsel Seç"}
+        </Button>
 
-        <TabsContent value="upload">
-          <div className="space-y-4">
-            <div
-              className={cn(
-                "border-2 border-dashed rounded-md p-6 flex flex-col items-center justify-center cursor-pointer transition-colors",
-                dragActive ? "border-primary bg-primary/5" : "border-muted-foreground/25 hover:border-primary/50",
-                isUploading && "opacity-50 pointer-events-none",
-              )}
-              onDragEnter={handleDrag}
-              onDragOver={handleDrag}
-              onDragLeave={handleDrag}
-              onDrop={handleDrop}
-              onClick={handleButtonClick}
-            >
-              <input
-                ref={inputRef}
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={(e) => handleFileChange(e.target.files)}
-                disabled={isUploading}
-              />
+        {previewUrl && (
+          <Button type="button" variant="outline" size="icon" onClick={handleRemoveImage} disabled={isUploading}>
+            <X className="h-4 w-4" />
+          </Button>
+        )}
+      </div>
 
-              {isUploading ? (
-                <div className="flex flex-col items-center justify-center py-4">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-2"></div>
-                  <p className="text-sm text-muted-foreground">Yükleniyor...</p>
-                </div>
-              ) : (
-                <div className="flex flex-col items-center justify-center py-4">
-                  <ImageIcon className="h-10 w-10 text-muted-foreground mb-2" />
-                  <p className="text-sm font-medium mb-1">Görsel yüklemek için tıklayın veya sürükleyin</p>
-                  <p className="text-xs text-muted-foreground">PNG, JPG, GIF, WEBP (maks. 2MB)</p>
-                </div>
-              )}
-            </div>
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept={acceptedTypes || "image/*"}
+        onChange={handleFileSelect}
+        className="hidden"
+      />
 
-            {previewUrl && (
-              <div className="mt-4 flex flex-col items-center">
-                <p className="text-sm font-medium mb-2">Yüklenen Görsel:</p>
-                <div className="relative h-40 w-full overflow-hidden rounded-lg border-2 border-muted">
-                  <img src={previewUrl} alt="Yüklenen görsel" className="h-full w-full object-contain" />
-                </div>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="mt-2"
-                  onClick={() => setPreviewUrl(null)}
-                >
-                  Görseli Kaldır
-                </Button>
-              </div>
-            )}
+      {previewUrl ? (
+        <div className="relative w-full max-w-xs">
+          <div className="aspect-square rounded-lg border-2 border-dashed border-muted-foreground/25 p-2">
+            <img
+              src={previewUrl || "/placeholder.svg"}
+              alt="Yüklenen görsel"
+              className="w-full h-full object-contain rounded"
+            />
           </div>
-        </TabsContent>
-
-        <TabsContent value="url">
-          <form onSubmit={handleUrlSubmit} className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <Input
-                type="url"
-                placeholder="https://ornek.com/gorsel.jpg"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                className="flex-1"
-              />
-              <Button type="submit">Ekle</Button>
-            </div>
-            <div className="flex items-center justify-center py-4">
-              <LinkIcon className="h-5 w-5 text-muted-foreground mr-2" />
-              <p className="text-xs text-muted-foreground">Görsel URL'i girin</p>
-            </div>
-          </form>
-        </TabsContent>
-      </Tabs>
+        </div>
+      ) : (
+        <div className="flex items-center justify-center w-full max-w-xs aspect-square rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/50">
+          <div className="text-center">
+            <ImageIcon className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
+            <p className="text-sm text-muted-foreground">Görsel seçilmedi</p>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
