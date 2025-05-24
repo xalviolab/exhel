@@ -20,12 +20,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/components/ui/use-toast"
 import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
-import { Plus, Edit } from "lucide-react"
+import { Plus, Edit, Award } from "lucide-react"
 import { v4 as uuidv4 } from "uuid"
 import { ImageUpload } from "@/components/image-upload"
 
 interface BadgeFormProps {
   badgeId?: string
+  type?: string
   defaultValues?: {
     name: string
     description: string
@@ -33,11 +34,10 @@ interface BadgeFormProps {
     requirement_type: string
     requirement_value: number
   }
-  type?: string
   children?: React.ReactNode
 }
 
-export function BadgeForm({ badgeId, defaultValues, type, children }: BadgeFormProps) {
+export function BadgeForm({ badgeId, type, defaultValues, children }: BadgeFormProps) {
   const [open, setOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const { toast } = useToast()
@@ -123,7 +123,10 @@ export function BadgeForm({ badgeId, defaultValues, type, children }: BadgeFormP
       <DialogContent className="sm:max-w-[500px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>{badgeId ? "Rozeti Düzenle" : "Yeni Rozet Oluştur"}</DialogTitle>
+            <DialogTitle className="flex items-center gap-2">
+              <Award className="h-5 w-5" />
+              {badgeId ? "Rozeti Düzenle" : "Yeni Rozet Oluştur"}
+            </DialogTitle>
             <DialogDescription>
               {badgeId
                 ? "Rozet bilgilerini güncelleyin."
@@ -141,25 +144,12 @@ export function BadgeForm({ badgeId, defaultValues, type, children }: BadgeFormP
                 id="description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                rows={3}
+                rows={2}
               />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="image_url">Rozet Görseli</Label>
-              <ImageUpload onImageUploaded={(url) => setImageUrl(url)} />
-              {imageUrl && (
-                <div className="mt-2 flex items-center justify-center">
-                  <div className="badge-container h-20 w-20">
-                    {imageUrl.endsWith(".svg") ? (
-                      <object data={imageUrl} type="image/svg+xml" className="badge-svg" aria-label="Rozet görseli">
-                        <img src={imageUrl || "/placeholder.svg"} alt="Rozet görseli" className="badge-image" />
-                      </object>
-                    ) : (
-                      <img src={imageUrl || "/placeholder.svg"} alt="Rozet görseli" className="badge-image" />
-                    )}
-                  </div>
-                </div>
-              )}
+              <ImageUpload onImageUploaded={(url) => setImageUrl(url)} currentImage={imageUrl} />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
