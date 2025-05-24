@@ -51,14 +51,24 @@ export function BadgeForm({ badgeId, type, defaultValues, children }: BadgeFormP
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    if (!name.trim()) {
+      toast({
+        title: "Hata",
+        description: "Rozet adı gereklidir.",
+        variant: "destructive",
+      })
+      return
+    }
+
     setIsLoading(true)
 
     try {
       const supabase = createClient()
 
       const badgeData = {
-        name,
-        description,
+        name: name.trim(),
+        description: description.trim(),
         image_url: imageUrl,
         requirement_type: requirementType,
         requirement_value: requirementValue,
@@ -91,8 +101,19 @@ export function BadgeForm({ badgeId, type, defaultValues, children }: BadgeFormP
       }
 
       setOpen(false)
+
+      // Formu temizle
+      if (!badgeId) {
+        setName("")
+        setDescription("")
+        setImageUrl("")
+        setRequirementType("streak")
+        setRequirementValue(1)
+      }
+
       router.refresh()
     } catch (error: any) {
+      console.error("Badge save error:", error)
       toast({
         title: "Hata",
         description: error.message || "Rozet kaydedilirken bir hata oluştu.",
@@ -135,8 +156,14 @@ export function BadgeForm({ badgeId, type, defaultValues, children }: BadgeFormP
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="name">Rozet Adı</Label>
-              <Input id="name" value={name} onChange={(e) => setName(e.target.value)} required />
+              <Label htmlFor="name">Rozet Adı *</Label>
+              <Input
+                id="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                placeholder="Rozet adını girin"
+              />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="description">Açıklama</Label>
@@ -145,11 +172,12 @@ export function BadgeForm({ badgeId, type, defaultValues, children }: BadgeFormP
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={2}
+                placeholder="Rozet açıklamasını girin"
               />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="image_url">Rozet Görseli</Label>
-              <ImageUpload onImageUploaded={(url) => setImageUrl(url)} currentImage={imageUrl} />
+              <ImageUpload onImageUploaded={(url) => setImageUrl(url)} currentImage={imageUrl} showFrame={false} />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
@@ -173,7 +201,7 @@ export function BadgeForm({ badgeId, type, defaultValues, children }: BadgeFormP
                   id="requirement_value"
                   type="number"
                   value={requirementValue}
-                  onChange={(e) => setRequirementValue(Number.parseInt(e.target.value))}
+                  onChange={(e) => setRequirementValue(Number.parseInt(e.target.value) || 1)}
                   min={1}
                   required
                 />
