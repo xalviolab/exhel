@@ -91,8 +91,8 @@ export function AdminLayout({ children }: AdminLayoutProps) {
             <SheetContent side="left" className="w-64 p-0">
               <div className="flex h-16 items-center border-b px-4">
                 <div className="flex items-center gap-2">
-                  <Heart className="h-6 w-6 text-blue-600" />
-                  <span className="text-lg font-bold">Edulogy Admin</span>
+                  <Heart className="h-6 w-6 text-red-500" />
+                  <span className="text-lg font-bold">CardioEdu Admin</span>
                 </div>
                 <Button variant="ghost" size="icon" className="ml-auto" onClick={() => setOpen(false)}>
                   <X className="h-5 w-5" />
@@ -125,8 +125,8 @@ export function AdminLayout({ children }: AdminLayoutProps) {
             </SheetContent>
           </Sheet>
           <Link href="/admin" className="flex items-center gap-2">
-            <Heart className="h-6 w-6 text-blue-600" />
-            <span className="text-lg font-bold hidden md:inline-block">Edulogy Admin</span>
+            <Heart className="h-6 w-6 text-red-500" />
+            <span className="text-lg font-bold hidden md:inline-block">CardioEdu Admin</span>
           </Link>
         </div>
         <div className="flex items-center gap-4">
