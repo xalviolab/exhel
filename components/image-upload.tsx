@@ -12,9 +12,16 @@ interface ImageUploadProps {
   acceptedTypes?: string
   className?: string
   currentImage?: string
+  showFrame?: boolean // Çerçeve gösterilip gösterilmeyeceği
 }
 
-export function ImageUpload({ onImageUploaded, acceptedTypes, className, currentImage }: ImageUploadProps) {
+export function ImageUpload({
+  onImageUploaded,
+  acceptedTypes = "image/png,image/svg+xml",
+  className,
+  currentImage,
+  showFrame = false,
+}: ImageUploadProps) {
   const [isUploading, setIsUploading] = useState(false)
   const [previewUrl, setPreviewUrl] = useState<string | null>(currentImage || null)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -24,21 +31,21 @@ export function ImageUpload({ onImageUploaded, acceptedTypes, className, current
     const file = event.target.files?.[0]
     if (!file) return
 
-    // Dosya türü kontrolü
-    if (!file.type.startsWith("image/")) {
+    // Dosya türü kontrolü - sadece PNG ve SVG
+    if (!file.type.match(/^image\/(png|svg\+xml)$/)) {
       toast({
         title: "Hata",
-        description: "Lütfen geçerli bir görsel dosyası seçin.",
+        description: "Sadece PNG ve SVG formatında dosyalar kabul edilir.",
         variant: "destructive",
       })
       return
     }
 
-    // Dosya boyutu kontrolü (5MB)
-    if (file.size > 5 * 1024 * 1024) {
+    // Dosya boyutu kontrolü (2MB)
+    if (file.size > 2 * 1024 * 1024) {
       toast({
         title: "Hata",
-        description: "Dosya boyutu 5MB'dan küçük olmalıdır.",
+        description: "Dosya boyutu 2MB'dan küçük olmalıdır.",
         variant: "destructive",
       })
       return
@@ -58,6 +65,9 @@ export function ImageUpload({ onImageUploaded, acceptedTypes, className, current
           title: "Başarılı",
           description: "Görsel başarıyla yüklendi.",
         })
+      }
+      reader.onerror = () => {
+        throw new Error("Dosya okunamadı")
       }
       reader.readAsDataURL(file)
     } catch (error: any) {
@@ -110,29 +120,55 @@ export function ImageUpload({ onImageUploaded, acceptedTypes, className, current
         )}
       </div>
 
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept={acceptedTypes || "image/*"}
-        onChange={handleFileSelect}
-        className="hidden"
-      />
+      <input ref={fileInputRef} type="file" accept={acceptedTypes} onChange={handleFileSelect} className="hidden" />
 
       {previewUrl ? (
         <div className="relative w-full max-w-xs">
-          <div className="aspect-square rounded-lg border-2 border-dashed border-muted-foreground/25 p-2">
-            <img
-              src={previewUrl || "/placeholder.svg"}
-              alt="Yüklenen görsel"
-              className="w-full h-full object-contain rounded"
-            />
-          </div>
+          {showFrame ? (
+            <div className="aspect-square rounded-lg border-2 border-dashed border-muted-foreground/25 p-2 bg-muted/10">
+              {previewUrl.includes("data:image/svg+xml") || previewUrl.endsWith(".svg") ? (
+                <div
+                  className="w-full h-full flex items-center justify-center"
+                  dangerouslySetInnerHTML={{
+                    __html: previewUrl.startsWith("data:")
+                      ? atob(previewUrl.split(",")[1])
+                      : `<img src="${previewUrl}" alt="Görsel" style="max-width: 100%; max-height: 100%; object-fit: contain;" />`,
+                  }}
+                />
+              ) : (
+                <img
+                  src={previewUrl || "/placeholder.svg"}
+                  alt="Yüklenen görsel"
+                  className="w-full h-full object-contain rounded"
+                />
+              )}
+            </div>
+          ) : (
+            <div className="w-full">
+              {previewUrl.includes("data:image/svg+xml") || previewUrl.endsWith(".svg") ? (
+                <div
+                  className="w-full flex items-center justify-center"
+                  dangerouslySetInnerHTML={{
+                    __html: previewUrl.startsWith("data:")
+                      ? atob(previewUrl.split(",")[1])
+                      : `<img src="${previewUrl}" alt="Görsel" style="max-width: 100%; height: auto;" />`,
+                  }}
+                />
+              ) : (
+                <img
+                  src={previewUrl || "/placeholder.svg"}
+                  alt="Yüklenen görsel"
+                  className="w-full h-auto object-contain"
+                />
+              )}
+            </div>
+          )}
         </div>
       ) : (
         <div className="flex items-center justify-center w-full max-w-xs aspect-square rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/50">
           <div className="text-center">
             <ImageIcon className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
-            <p className="text-sm text-muted-foreground">Görsel seçilmedi</p>
+            <p className="text-sm text-muted-foreground">PNG veya SVG seçin</p>
           </div>
         </div>
       )}
