@@ -2,77 +2,68 @@
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
-import { CookieIcon, X } from "lucide-react"
-import Link from "next/link"
+import { Card, CardContent } from "@/components/ui/card"
+import { Cookie, X } from "lucide-react"
 
 export function CookieConsent() {
-  const [isVisible, setIsVisible] = useState(false)
+  const [showBanner, setShowBanner] = useState(false)
 
   useEffect(() => {
-    // Check if user has already accepted cookies
-    const hasAccepted = localStorage.getItem("cookie-consent-accepted")
-    if (!hasAccepted) {
-      // Show the cookie consent after a short delay
-      const timer = setTimeout(() => {
-        setIsVisible(true)
-      }, 1000)
-      return () => clearTimeout(timer)
+    const consent = localStorage.getItem("cookie-consent")
+    if (!consent) {
+      setShowBanner(true)
     }
   }, [])
 
-  const handleAccept = () => {
-    localStorage.setItem("cookie-consent-accepted", "true")
-    setIsVisible(false)
+  const acceptCookies = () => {
+    localStorage.setItem("cookie-consent", "accepted")
+    setShowBanner(false)
   }
 
-  const handleDecline = () => {
-    // Still mark as seen, but with a different value
-    localStorage.setItem("cookie-consent-accepted", "false")
-    setIsVisible(false)
+  const rejectCookies = () => {
+    localStorage.setItem("cookie-consent", "rejected")
+    setShowBanner(false)
   }
 
-  const handleClose = () => {
-    setIsVisible(false)
-  }
-
-  if (!isVisible) return null
+  if (!showBanner) return null
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 p-4 md:p-6">
-      <Card className="mx-auto max-w-4xl shadow-lg border-primary/20">
-        <CardContent className="pt-6 pb-2">
-          <div className="flex items-start">
-            <CookieIcon className="h-6 w-6 text-primary mr-4 mt-1 flex-shrink-0" />
-            <div className="flex-1">
-              <div className="flex items-start justify-between">
-                <h3 className="text-lg font-medium mb-2">Çerez Kullanımı</h3>
-                <Button variant="ghost" size="icon" onClick={handleClose} className="h-8 w-8">
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-              <p className="text-sm text-muted-foreground mb-2">
-                Bu web sitesi, deneyiminizi geliştirmek için çerezleri kullanmaktadır. Sitemizi kullanmaya devam ederek,
-                çerez kullanımımızı kabul etmiş olursunuz.
-              </p>
+    <div className="fixed bottom-0 left-0 right-0 z-50 p-4 animate-slide-up">
+      <Card className="glass-card border-navy/20 shadow-2xl">
+        <CardContent className="p-6">
+          <div className="flex items-start gap-4">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-navy/10">
+              <Cookie className="h-5 w-5 text-navy" />
+            </div>
+            <div className="flex-1 space-y-3">
+              <h3 className="font-semibold text-navy">Çerez Kullanımı</h3>
               <p className="text-sm text-muted-foreground">
-                Daha fazla bilgi için{" "}
-                <Link href="/privacy-policy" className="text-primary hover:underline">
+                Edulogy platformunda size daha iyi hizmet verebilmek için çerezler kullanıyoruz. Çerez kullanımımız
+                hakkında detaylı bilgi için{" "}
+                <a href="/privacy-policy" className="text-navy hover:underline">
                   Gizlilik Politikamızı
-                </Link>{" "}
+                </a>{" "}
                 inceleyebilirsiniz.
               </p>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <Button onClick={acceptCookies} className="corporate-button">
+                  Kabul Et
+                </Button>
+                <Button onClick={rejectCookies} variant="outline" className="border-navy/20 text-navy hover:bg-navy/5">
+                  Reddet
+                </Button>
+              </div>
             </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowBanner(false)}
+              className="text-muted-foreground hover:text-navy"
+            >
+              <X className="h-4 w-4" />
+            </Button>
           </div>
         </CardContent>
-        <CardFooter className="flex justify-end gap-2 pt-2">
-          <Button variant="outline" size="sm" onClick={handleDecline}>
-            Reddet
-          </Button>
-          <Button size="sm" onClick={handleAccept}>
-            Kabul Et
-          </Button>
-        </CardFooter>
       </Card>
     </div>
   )

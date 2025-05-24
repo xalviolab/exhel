@@ -2,7 +2,21 @@
 
 import type { ReactNode } from "react"
 import Link from "next/link"
-import { Heart, Home, BookOpen, Users, LogOut, Menu, LayoutDashboard, Award, HelpCircle, X, AlertTriangle, Filter, ChevronDown, ChevronUp } from "lucide-react"
+import {
+  Heart,
+  Home,
+  BookOpen,
+  Users,
+  LogOut,
+  Menu,
+  LayoutDashboard,
+  Award,
+  HelpCircle,
+  X,
+  Filter,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react"
 import { DisclaimerDialog } from "@/components/disclaimer-dialog"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
@@ -35,8 +49,6 @@ export function AdminLayout({ children }: AdminLayoutProps) {
     try {
       const supabase = createClient()
       await supabase.auth.signOut()
-
-      // Doğrudan yönlendirme yerine sayfayı yenileme
       window.location.href = "/"
     } catch (error) {
       console.error("Çıkış yapılırken hata oluştu:", error)
@@ -45,15 +57,12 @@ export function AdminLayout({ children }: AdminLayoutProps) {
 
   const handleClassChange = (value: string) => {
     setSelectedClass(value)
-
-    // URL'yi güncelle
     const params = new URLSearchParams(searchParams.toString())
     if (value === "all") {
       params.delete("class")
     } else {
       params.set("class", value)
     }
-
     const newUrl = `${pathname}?${params.toString()}`
     router.push(newUrl)
   }
@@ -92,7 +101,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
               <div className="flex h-16 items-center border-b px-4">
                 <div className="flex items-center gap-2">
                   <Heart className="h-6 w-6 text-red-500" />
-                  <span className="text-lg font-bold">CardioEdu Admin</span>
+                  <span className="text-lg font-bold">Edulogy Admin</span>
                 </div>
                 <Button variant="ghost" size="icon" className="ml-auto" onClick={() => setOpen(false)}>
                   <X className="h-5 w-5" />
@@ -126,7 +135,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
           </Sheet>
           <Link href="/admin" className="flex items-center gap-2">
             <Heart className="h-6 w-6 text-red-500" />
-            <span className="text-lg font-bold hidden md:inline-block">CardioEdu Admin</span>
+            <span className="text-lg font-bold hidden md:inline-block">Edulogy Admin</span>
           </Link>
         </div>
         <div className="flex items-center gap-4">

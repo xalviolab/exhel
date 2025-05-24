@@ -32,8 +32,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     try {
       const supabase = createClient()
       await supabase.auth.signOut()
-
-      // Doğrudan yönlendirme yerine sayfayı yenileme
       window.location.href = "/"
     } catch (error) {
       console.error("Çıkış yapılırken hata oluştu:", error)
@@ -64,7 +62,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               <div className="flex h-16 items-center border-b px-4">
                 <div className="flex items-center gap-2">
                   <Heart className="h-6 w-6 text-red-500" />
-                  <span className="text-lg font-bold">CardioEdu</span>
+                  <span className="text-lg font-bold">Edulogy</span>
                 </div>
                 <Button variant="ghost" size="icon" className="ml-auto" onClick={() => setOpen(false)}>
                   <X className="h-5 w-5" />
@@ -98,7 +96,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           </Sheet>
           <Link href="/dashboard" className="flex items-center gap-2">
             <Heart className="h-6 w-6 text-red-500" />
-            <span className="text-lg font-bold hidden md:inline-block">CardioEdu</span>
+            <span className="text-lg font-bold hidden md:inline-block">Edulogy</span>
           </Link>
         </div>
         <div className="flex items-center gap-4">
@@ -111,12 +109,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             <MessageSquare className="h-4 w-4" />
             <span>Geri Bildirim</span>
           </Button>
-          <Button
-            variant="destructive"
-            size="icon"
-            className="md:hidden"
-            onClick={() => setFeedbackOpen(true)}
-          >
+          <Button variant="destructive" size="icon" className="md:hidden" onClick={() => setFeedbackOpen(true)}>
             <MessageSquare className="h-4 w-4" />
           </Button>
           <ThemeToggle />
