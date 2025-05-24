@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react"
 import Link from "next/link"
-import { Heart, Home, BookOpen, Award, User, Settings, LogOut, Menu, X, MessageSquare } from "lucide-react"
+import { GraduationCap, Home, BookOpen, Award, User, Settings, LogOut, Menu, X, MessageSquare } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -60,9 +60,14 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             </SheetTrigger>
             <SheetContent side="left" className="w-64 p-0">
               <div className="flex h-16 items-center border-b px-4">
-                <div className="flex items-center gap-2">
-                  <Heart className="h-6 w-6 text-red-500" />
-                  <span className="text-lg font-bold">Edulogy</span>
+                <div className="flex items-center gap-3">
+                  <div className="corporate-gradient p-2 rounded-xl">
+                    <GraduationCap className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <h1 className="text-lg font-bold text-navy">Edulogy</h1>
+                    <p className="text-xs text-muted-foreground">by Healision</p>
+                  </div>
                 </div>
                 <Button variant="ghost" size="icon" className="ml-auto" onClick={() => setOpen(false)}>
                   <X className="h-5 w-5" />
@@ -94,9 +99,14 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               </nav>
             </SheetContent>
           </Sheet>
-          <Link href="/dashboard" className="flex items-center gap-2">
-            <Heart className="h-6 w-6 text-red-500" />
-            <span className="text-lg font-bold hidden md:inline-block">Edulogy</span>
+          <Link href="/dashboard" className="flex items-center gap-3">
+            <div className="corporate-gradient p-2 rounded-xl">
+              <GraduationCap className="h-6 w-6 text-white" />
+            </div>
+            <div className="hidden md:block">
+              <h1 className="text-lg font-bold text-navy">Edulogy</h1>
+              <p className="text-xs text-muted-foreground">by Healision</p>
+            </div>
           </Link>
         </div>
         <div className="flex items-center gap-4">
