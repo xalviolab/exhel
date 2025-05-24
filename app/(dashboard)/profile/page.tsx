@@ -1,5 +1,7 @@
 "use client"
 
+import type React from "react"
+
 import { useState, useEffect } from "react"
 import { DashboardLayout } from "@/components/dashboard-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -115,7 +117,11 @@ export default function ProfilePage() {
     }
   }
 
-  const handleSave = async () => {
+  const handleSave = async (e?: React.FormEvent) => {
+    if (e) {
+      e.preventDefault()
+    }
+
     if (!profile) return
 
     setSaving(true)
@@ -146,6 +152,7 @@ export default function ProfilePage() {
         description: "Profil bilgileriniz güncellendi.",
       })
     } catch (error: any) {
+      console.error("Profile update error:", error)
       toast({
         title: "Hata",
         description: "Profil güncellenirken bir hata oluştu.",
@@ -223,8 +230,8 @@ export default function ProfilePage() {
             <CardHeader className="text-center">
               <div className="flex flex-col items-center space-y-4">
                 {editing ? (
-                  <div className="space-y-4">
-                    <Avatar className="h-24 w-24">
+                  <form onSubmit={handleSave} className="space-y-4 w-full">
+                    <Avatar className="h-24 w-24 mx-auto">
                       <AvatarImage src={editForm.avatar_url || "/placeholder.svg"} />
                       <AvatarFallback>
                         {editForm.full_name ? editForm.full_name.charAt(0).toUpperCase() : "U"}
@@ -233,29 +240,36 @@ export default function ProfilePage() {
                     <ImageUpload
                       onImageUploaded={(url) => setEditForm({ ...editForm, avatar_url: url })}
                       currentImage={editForm.avatar_url}
+                      showFrame={true}
                     />
-                  </div>
-                ) : (
-                  <Avatar className="h-24 w-24">
-                    <AvatarImage src={profile.avatar_url || "/placeholder.svg"} />
-                    <AvatarFallback>
-                      {profile.full_name ? profile.full_name.charAt(0).toUpperCase() : "U"}
-                    </AvatarFallback>
-                  </Avatar>
-                )}
-
-                {editing ? (
-                  <div className="w-full space-y-2">
-                    <Label htmlFor="full_name">Ad Soyad</Label>
-                    <Input
-                      id="full_name"
-                      value={editForm.full_name}
-                      onChange={(e) => setEditForm({ ...editForm, full_name: e.target.value })}
-                      placeholder="Adınızı ve soyadınızı girin"
-                    />
-                  </div>
+                    <div className="w-full space-y-2">
+                      <Label htmlFor="full_name">Ad Soyad</Label>
+                      <Input
+                        id="full_name"
+                        value={editForm.full_name}
+                        onChange={(e) => setEditForm({ ...editForm, full_name: e.target.value })}
+                        placeholder="Adınızı ve soyadınızı girin"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="bio">Hakkımda</Label>
+                      <Textarea
+                        id="bio"
+                        value={editForm.bio}
+                        onChange={(e) => setEditForm({ ...editForm, bio: e.target.value })}
+                        placeholder="Kendiniz hakkında kısa bir açıklama yazın"
+                        rows={3}
+                      />
+                    </div>
+                  </form>
                 ) : (
                   <div>
+                    <Avatar className="h-24 w-24 mx-auto mb-4">
+                      <AvatarImage src={profile.avatar_url || "/placeholder.svg"} />
+                      <AvatarFallback>
+                        {profile.full_name ? profile.full_name.charAt(0).toUpperCase() : "U"}
+                      </AvatarFallback>
+                    </Avatar>
                     <CardTitle className="text-xl">{profile.full_name || "İsimsiz Kullanıcı"}</CardTitle>
                     <CardDescription className="flex items-center gap-1 mt-1">
                       <Mail className="h-4 w-4" />
@@ -265,19 +279,8 @@ export default function ProfilePage() {
                 )}
               </div>
             </CardHeader>
-            <CardContent>
-              {editing ? (
-                <div className="space-y-2">
-                  <Label htmlFor="bio">Hakkımda</Label>
-                  <Textarea
-                    id="bio"
-                    value={editForm.bio}
-                    onChange={(e) => setEditForm({ ...editForm, bio: e.target.value })}
-                    placeholder="Kendiniz hakkında kısa bir açıklama yazın"
-                    rows={3}
-                  />
-                </div>
-              ) : (
+            {!editing && (
+              <CardContent>
                 <div className="space-y-4">
                   <div>
                     <h4 className="font-medium mb-2">Hakkımda</h4>
@@ -289,8 +292,8 @@ export default function ProfilePage() {
                     Katılım: {new Date(profile.created_at).toLocaleDateString("tr-TR")}
                   </div>
                 </div>
-              )}
-            </CardContent>
+              </CardContent>
+            )}
           </Card>
 
           {/* İstatistikler */}
