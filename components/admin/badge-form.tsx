@@ -20,12 +20,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/components/ui/use-toast"
 import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
+import { Plus, Edit } from "lucide-react"
+import { v4 as uuidv4 } from "uuid"
 import { ImageUpload } from "@/components/image-upload"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 interface BadgeFormProps {
   badgeId?: string
-  type?: string
   defaultValues?: {
     name: string
     description: string
@@ -33,10 +33,11 @@ interface BadgeFormProps {
     requirement_type: string
     requirement_value: number
   }
+  type?: string
   children?: React.ReactNode
 }
 
-export function BadgeForm({ badgeId, type, defaultValues, children }: BadgeFormProps) {
+export function BadgeForm({ badgeId, defaultValues, type, children }: BadgeFormProps) {
   const [open, setOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const { toast } = useToast()
@@ -75,7 +76,11 @@ export function BadgeForm({ badgeId, type, defaultValues, children }: BadgeFormP
         })
       } else {
         // Yeni oluşturma
-        const { error } = await supabase.from("badges").insert(badgeData)
+        const newBadgeId = uuidv4()
+        const { error } = await supabase.from("badges").insert({
+          id: newBadgeId,
+          ...badgeData,
+        })
 
         if (error) throw error
 
@@ -98,18 +103,19 @@ export function BadgeForm({ badgeId, type, defaultValues, children }: BadgeFormP
     }
   }
 
-  const requirementTypeOptions = [
-    { value: "streak", label: "Seri (Gün)" },
+  const requirementTypes = [
+    { value: "streak", label: "Günlük Seri" },
     { value: "lessons_completed", label: "Tamamlanan Ders" },
     { value: "xp_earned", label: "Kazanılan XP" },
-    { value: "level", label: "Seviye" },
+    { value: "level", label: "Ulaşılan Seviye" },
   ]
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {children || (
-          <Button variant="outline" size="sm" className="mt-2">
+          <Button variant={badgeId ? "outline" : "default"} size={badgeId ? "sm" : "default"}>
+            {badgeId ? <Edit className="h-4 w-4 mr-2" /> : <Plus className="h-4 w-4 mr-2" />}
             {badgeId ? "Düzenle" : "Yeni Rozet"}
           </Button>
         )}
@@ -140,31 +146,17 @@ export function BadgeForm({ badgeId, type, defaultValues, children }: BadgeFormP
             </div>
             <div className="grid gap-2">
               <Label htmlFor="image_url">Rozet Görseli</Label>
-              <Tabs defaultValue="upload" className="w-full">
-                <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="upload">Görsel Yükle</TabsTrigger>
-                  <TabsTrigger value="url">URL Ekle</TabsTrigger>
-                </TabsList>
-                <TabsContent value="upload" className="pt-2">
-                  <ImageUpload onImageUploaded={(url) => setImageUrl(url)} />
-                </TabsContent>
-                <TabsContent value="url" className="pt-2">
-                  <Input
-                    id="image_url"
-                    value={imageUrl}
-                    onChange={(e) => setImageUrl(e.target.value)}
-                    placeholder="https://example.com/image.svg"
-                  />
-                </TabsContent>
-              </Tabs>
+              <ImageUpload onImageUploaded={(url) => setImageUrl(url)} />
               {imageUrl && (
                 <div className="mt-2 flex items-center justify-center">
-                  <div className="relative h-24 w-24 overflow-hidden">
-                    <img
-                      src={imageUrl || "/placeholder.svg"}
-                      alt="Rozet görseli"
-                      className="h-full w-full object-contain"
-                    />
+                  <div className="badge-container h-20 w-20">
+                    {imageUrl.endsWith(".svg") ? (
+                      <object data={imageUrl} type="image/svg+xml" className="badge-svg" aria-label="Rozet görseli">
+                        <img src={imageUrl || "/placeholder.svg"} alt="Rozet görseli" className="badge-image" />
+                      </object>
+                    ) : (
+                      <img src={imageUrl || "/placeholder.svg"} alt="Rozet görseli" className="badge-image" />
+                    )}
                   </div>
                 </div>
               )}
@@ -172,14 +164,14 @@ export function BadgeForm({ badgeId, type, defaultValues, children }: BadgeFormP
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="requirement_type">Gereksinim Türü</Label>
-                <Select value={requirementType} onValueChange={setRequirementType} disabled={!!type}>
+                <Select value={requirementType} onValueChange={setRequirementType}>
                   <SelectTrigger id="requirement_type">
                     <SelectValue placeholder="Gereksinim türü seçin" />
                   </SelectTrigger>
                   <SelectContent>
-                    {requirementTypeOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
+                    {requirementTypes.map((type) => (
+                      <SelectItem key={type.value} value={type.value}>
+                        {type.label}
                       </SelectItem>
                     ))}
                   </SelectContent>

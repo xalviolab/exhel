@@ -31,7 +31,7 @@ Kardiyoloji eğitim platformunu geliştirmek için "Öğrenme Yolları" (Learnin
 
 ### Veritabanı Yapısı
 
-```sql
+\`\`\`sql
 CREATE TABLE learning_paths (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   title TEXT NOT NULL,
@@ -67,7 +67,7 @@ CREATE TABLE user_path_progress (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   UNIQUE(user_id, path_id)
 );
-```
+\`\`\`
 
 ### Kullanıcı Arayüzü
 
@@ -128,4 +128,3 @@ Büyük Boyutlar (Pop-up Bildirim, Başarı Kazanma Ekranı):
 Önemli Not: SVG kullandığınız için rozeti tek bir vector dosya olarak tasarlarsınız. Web sitenizin kodunda (HTML/CSS) bu SVG'nin görüntüleneceği boyutu (örneğin width="48" height="48" veya style="width: 64px; height: 64px;") belirtirsiniz. SVG dosyası, belirttiğiniz boyuta otomatik ve net bir şekilde ölçeklenir.
 
 Tavsiye: Farklı kullanım alanları için yukarıdaki boyut aralıklarından birkaçını belirleyin. Rozetlerinizi tasarlarken, en küçük boyutta bile temel şeklinin ve ikonun anlaşılır olmasına dikkat edin. Platformunuzda farklı ekran boyutlarında (mobil, tablet, masaüstü) bu boyutları test ederek en iyi görünen ve arayüzünüzle en uyumlu olanları seçin.
-

@@ -24,6 +24,7 @@ async function createBucketIfNotExists(bucketName: string) {
     const { error } = await supabase.storage.createBucket(bucketName, {
       public: true,
       fileSizeLimit: 5242880, // 5MB
+      allowedMimeTypes: ["image/jpeg", "image/png", "image/gif", "image/webp", "image/svg+xml"],
     })
 
     if (error) {
@@ -39,32 +40,55 @@ async function createBucketIfNotExists(bucketName: string) {
   }
 }
 
+// Dosya türü kontrolü
+function validateFileType(file: File): boolean {
+  const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp", "image/svg+xml"]
+  return allowedTypes.includes(file.type)
+}
+
+// Dosya boyutu kontrolü (5MB)
+function validateFileSize(file: File): boolean {
+  const maxSize = 5 * 1024 * 1024 // 5MB
+  return file.size <= maxSize
+}
+
+// Dosya adını güvenli hale getir
+function sanitizeFileName(fileName: string): string {
+  return fileName.replace(/[^a-zA-Z0-9.-]/g, "_")
+}
+
 // Görsel yükleme fonksiyonu
 export async function uploadImage(file: File): Promise<string | null> {
   try {
-    const supabase = createClient()
+    // Dosya validasyonu
+    if (!validateFileType(file)) {
+      throw new Error("Desteklenmeyen dosya türü. Sadece JPEG, PNG, GIF, WebP ve SVG dosyaları kabul edilir.")
+    }
 
-    // Varsayılan bucket adı
-    const bucketName = "cardioedu"
+    if (!validateFileSize(file)) {
+      throw new Error("Dosya boyutu 5MB'dan büyük olamaz.")
+    }
+
+    const supabase = createClient()
+    const bucketName = "edulogy-assets"
 
     // Bucket'ı kontrol et ve gerekirse oluştur
     const bucketCreated = await createBucketIfNotExists(bucketName)
 
     if (!bucketCreated) {
-      console.warn("Storage bucket oluşturulamadı, URL ile devam ediliyor")
-      // Bucket oluşturulamadığında doğrudan dosyayı URL'e dönüştür
-      return URL.createObjectURL(file)
+      throw new Error("Storage bucket oluşturulamadı")
     }
 
-    // Dosya adını benzersiz yap
+    // Güvenli dosya adı oluştur
     const fileExt = file.name.split(".").pop()
-    const fileName = `${uuidv4()}.${fileExt}`
-    const filePath = `lesson-content/${fileName}`
+    const sanitizedName = sanitizeFileName(file.name.split(".")[0])
+    const fileName = `${sanitizedName}_${uuidv4()}.${fileExt}`
+    const filePath = `uploads/${new Date().getFullYear()}/${new Date().getMonth() + 1}/${fileName}`
 
     // Dosyayı yükle
     const { error: uploadError } = await supabase.storage.from(bucketName).upload(filePath, file, {
-      cacheControl: '3600',
-      upsert: true
+      cacheControl: "3600",
+      upsert: false, // Aynı dosya adıyla üzerine yazma
     })
 
     if (uploadError) {
@@ -72,13 +96,19 @@ export async function uploadImage(file: File): Promise<string | null> {
       throw uploadError
     }
 
-    // Dosya URL'ini al
+    // Dosya URL'ini al - domain URL'i kullan
     const { data } = supabase.storage.from(bucketName).getPublicUrl(filePath)
 
-    return data.publicUrl
+    // Domain URL'i ile değiştir
+    const domainUrl = data.publicUrl.replace(
+      /^https:\/\/[^/]+/,
+      `${window.location.protocol}//${window.location.host}/api/storage`,
+    )
+
+    return domainUrl
   } catch (error) {
     console.error("Görsel yükleme hatası:", error)
-    return null
+    throw error
   }
 }
 
@@ -86,22 +116,14 @@ export async function uploadImage(file: File): Promise<string | null> {
 export async function deleteImage(url: string): Promise<boolean> {
   try {
     const supabase = createClient()
-
-    // Varsayılan bucket adı
-    const bucketName = "cardioedu"
-
-    // Bucket'ı kontrol et ve gerekirse oluştur
-    const bucketExists = await createBucketIfNotExists(bucketName)
-
-    if (!bucketExists) {
-      console.error("Storage bucket bulunamadı veya oluşturulamadı")
-      return false
-    }
+    const bucketName = "edulogy-assets"
 
     // URL'den dosya yolunu çıkar
     const urlParts = url.split("/")
-    const fileName = urlParts[urlParts.length - 1]
-    const filePath = `lesson-content/${fileName}`
+    const pathIndex = urlParts.findIndex((part) => part === "uploads")
+    if (pathIndex === -1) return false
+
+    const filePath = urlParts.slice(pathIndex).join("/")
 
     const { error } = await supabase.storage.from(bucketName).remove([filePath])
 
@@ -113,5 +135,24 @@ export async function deleteImage(url: string): Promise<boolean> {
   } catch (error) {
     console.error("Görsel silme hatası:", error)
     return false
+  }
+}
+
+// Storage proxy API endpoint'i için
+export async function getStorageFile(path: string) {
+  try {
+    const supabase = createClient()
+    const bucketName = "edulogy-assets"
+
+    const { data, error } = await supabase.storage.from(bucketName).download(path)
+
+    if (error) {
+      throw error
+    }
+
+    return data
+  } catch (error) {
+    console.error("Dosya indirme hatası:", error)
+    return null
   }
 }
