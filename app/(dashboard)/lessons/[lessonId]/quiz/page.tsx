@@ -439,7 +439,7 @@ export default function QuizPage({ params }: QuizPageProps) {
                           (answer.is_correct ? (
                             <CheckCircle className="h-5 w-5 text-green-500" />
                           ) : selectedAnswer === answer.id ? (
-                            <XCircle className="h-5 w-5 text-blue-600" />
+                            <XCircle className="h-5 w-5 text-red-500" />
                           ) : null)}
                       </div>
 

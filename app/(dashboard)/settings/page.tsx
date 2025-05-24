@@ -24,7 +24,6 @@ export default function SettingsPage() {
   const [passwordError, setPasswordError] = useState<string | null>(null)
   const [isChangingPassword, setIsChangingPassword] = useState(false)
   const [isLoadingUser, setIsLoadingUser] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const { toast } = useToast()
   const supabase = createClient()
 
@@ -32,37 +31,20 @@ export default function SettingsPage() {
     const fetchUser = async () => {
       try {
         setIsLoadingUser(true)
-        setError(null)
 
         // Önce mevcut oturumu kontrol et
-        const { data: sessionData, error: sessionError } = await supabase.auth.getSession()
-
-        if (sessionError) {
-          console.error("Session error:", sessionError)
-          setError("Oturum bilgileri alınamadı. Lütfen tekrar giriş yapın.")
-          return
-        }
+        const { data: sessionData } = await supabase.auth.getSession()
 
         if (!sessionData.session) {
-          setError("Oturum bulunamadı. Lütfen giriş yapın.")
+          window.location.href = "/login"
           return
         }
 
         // Kullanıcı bilgilerini getir
-        const { data, error: userError } = await supabase
-          .from("users")
-          .select("*")
-          .eq("id", sessionData.session.user.id)
-          .single()
+        const { data, error } = await supabase.from("users").select("*").eq("id", sessionData.session.user.id).single()
 
-        if (userError) {
-          console.error("Error fetching user:", userError)
-          setError("Kullanıcı bilgileri alınamadı.")
-          return
-        }
-
-        if (!data) {
-          setError("Kullanıcı bulunamadı.")
+        if (error) {
+          console.error("Error fetching user:", error)
           return
         }
 
@@ -71,26 +53,28 @@ export default function SettingsPage() {
         setAvatarUrl(data.avatar_url || "")
       } catch (error) {
         console.error("Error in fetchUser:", error)
-        setError("Kullanıcı bilgileri yüklenirken bir hata oluştu.")
+        toast({
+          title: "Hata",
+          description: "Kullanıcı bilgileri yüklenirken bir hata oluştu.",
+          variant: "destructive",
+        })
       } finally {
         setIsLoadingUser(false)
       }
     }
 
     fetchUser()
+
+    // Temizleme fonksiyonu
+    return () => {
+      // Gerekirse abonelikler veya zamanlayıcılar burada temizlenebilir
+    }
   }, [])
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!user) {
-      toast({
-        title: "Hata",
-        description: "Kullanıcı bilgileri bulunamadı.",
-        variant: "destructive",
-      })
-      return
-    }
+    if (!user) return
 
     setIsLoading(true)
 
@@ -174,22 +158,6 @@ export default function SettingsPage() {
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
             <p className="mt-4 text-muted-foreground">Yükleniyor...</p>
-          </div>
-        </div>
-      </DashboardLayout>
-    )
-  }
-
-  if (error) {
-    return (
-      <DashboardLayout>
-        <div className="flex items-center justify-center h-[60vh]">
-          <div className="text-center max-w-md">
-            <Alert variant="destructive" className="mb-4">
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-            <p className="text-muted-foreground mb-4">Lütfen tekrar giriş yapın veya daha sonra tekrar deneyin.</p>
-            <Button onClick={() => (window.location.href = "/login")}>Giriş Yap</Button>
           </div>
         </div>
       </DashboardLayout>
@@ -334,11 +302,11 @@ export default function SettingsPage() {
                 </div>
                 <div>
                   <p className="text-sm font-medium">Seviye</p>
-                  <p className="text-sm text-muted-foreground">{user.level || 1}</p>
+                  <p className="text-sm text-muted-foreground">{user.level}</p>
                 </div>
                 <div>
                   <p className="text-sm font-medium">Toplam XP</p>
-                  <p className="text-sm text-muted-foreground">{user.xp || 0}</p>
+                  <p className="text-sm text-muted-foreground">{user.xp}</p>
                 </div>
               </div>
             </CardContent>

@@ -10,7 +10,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Checkbox } from "@/components/ui/checkbox"
 import { Heart } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 
@@ -20,7 +19,6 @@ export default function LoginPage() {
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [rememberMe, setRememberMe] = useState(false)
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -29,36 +27,18 @@ export default function LoginPage() {
 
     try {
       const supabase = createClient()
-
-      console.log("Attempting login with:", { email })
-
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
 
       if (error) {
-        console.error("Login error:", error)
         throw error
       }
 
-      console.log("Login successful:", data)
-
-      if (data.session) {
-        console.log("Session created, redirecting to dashboard")
-        // Use router.push instead of window.location for better UX
-        router.push("/dashboard")
-        // Fallback to hard redirect if router doesn't work
-        setTimeout(() => {
-          if (window.location.pathname !== "/dashboard") {
-            window.location.href = "/dashboard"
-          }
-        }, 1000)
-      } else {
-        setError("Oturum oluşturulamadı, lütfen tekrar deneyin.")
-      }
+      router.push("/dashboard")
+      router.refresh()
     } catch (error: any) {
-      console.error("Login error:", error)
       setError(error.message || "Giriş yapılırken bir hata oluştu.")
     } finally {
       setLoading(false)
@@ -70,9 +50,9 @@ export default function LoginPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1 text-center">
           <div className="flex justify-center mb-2">
-            <Heart className="h-10 w-10 text-blue-600" />
+            <Heart className="h-10 w-10 text-red-500" />
           </div>
-          <CardTitle className="text-2xl font-bold">Edulogy</CardTitle>
+          <CardTitle className="text-2xl font-bold">CardioEdu</CardTitle>
           <CardDescription>Hesabınıza giriş yapın</CardDescription>
         </CardHeader>
         <CardContent>
@@ -96,7 +76,7 @@ export default function LoginPage() {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">Şifre</Label>
-                <Link href="/forgot-password" className="text-sm text-blue-600 hover:underline">
+                <Link href="/forgot-password" className="text-sm text-red-500 hover:underline">
                   Şifremi Unuttum
                 </Link>
               </div>
@@ -108,16 +88,6 @@ export default function LoginPage() {
                 required
               />
             </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="remember"
-                checked={rememberMe}
-                onCheckedChange={(checked) => setRememberMe(checked === true)}
-              />
-              <Label htmlFor="remember" className="text-sm font-normal">
-                Beni hatırla
-              </Label>
-            </div>
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? "Giriş Yapılıyor..." : "Giriş Yap"}
             </Button>
@@ -126,31 +96,12 @@ export default function LoginPage() {
         <CardFooter className="flex flex-col">
           <div className="text-center text-sm">
             Hesabınız yok mu?{" "}
-            <Link href="/register" className="text-sm text-blue-600 hover:underline">
+            <Link href="/register" className="text-red-500 hover:underline">
               Kayıt Ol
             </Link>
           </div>
-          <div className="mt-4 text-center text-xs text-muted-foreground">
-            Giriş yaparak{" "}
-            <Link href="/terms-of-service" className="text-primary hover:underline" target="_blank">
-              Kullanım Şartları
-            </Link>{" "}
-            ve{" "}
-            <Link href="/privacy-policy" className="text-primary hover:underline" target="_blank">
-              Gizlilik Politikası
-            </Link>
-            'nı kabul etmiş olursunuz.
-          </div>
         </CardFooter>
       </Card>
-
-      {/* Development environment check */}
-      {process.env.NODE_ENV === "development" && (
-        <div className="fixed bottom-4 right-4 bg-black text-white p-2 rounded text-xs">
-          <div>URL: {process.env.NEXT_PUBLIC_SUPABASE_URL ? "✅" : "❌"}</div>
-          <div>KEY: {process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? "✅" : "❌"}</div>
-        </div>
-      )}
     </div>
   )
 }

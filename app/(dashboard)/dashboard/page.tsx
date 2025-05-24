@@ -1,5 +1,3 @@
-export const dynamic = 'force-dynamic';
-
 import { getUserDetails, requireAuth } from "@/lib/auth"
 import { DashboardLayout } from "@/components/dashboard-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -8,7 +6,6 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { Award, BookOpen, Heart, Flame, Trophy, TrendingUp, ArrowRight, CheckCircle, Activity } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { redirect } from "next/navigation"
 
 // Varsayılan modüller
 const defaultModules = [
@@ -113,13 +110,8 @@ export default async function DashboardPage() {
   let userBadges = defaultBadges
   let userProgress = defaultProgress
 
-  const session = await requireAuth()
-
-  if (!session) {
-    redirect("/login")
-  }
-
   try {
+    await requireAuth()
     user = await getUserDetails()
 
     // Eğer kullanıcı bilgileri alınamazsa varsayılan değerler kullan
@@ -226,7 +218,7 @@ export default async function DashboardPage() {
                 {Math.max(0, user.hearts)}/{user.max_hearts}
               </span>
               {Math.max(0, user.hearts) === 0 && (
-                <span className="text-xs ml-1 text-blue-600">(24s içinde yenilenir)</span>
+                <span className="text-xs ml-1 text-red-500">(24s içinde yenilenir)</span>
               )}
             </div>
             <div className="flex items-center gap-1 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 px-3 py-1.5 rounded-full">

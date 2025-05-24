@@ -3,14 +3,14 @@ import "./globals.css"
 import { Inter } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
-import { CookieConsent } from "@/components/cookie-consent"
+
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata = {
-  title: "Edulogy - Kardiyoloji Eğitim Platformu",
+  title: "CardioEdu - Kardiyoloji Eğitim Platformu",
   description: "Tıp öğrencileri ve sağlık profesyonelleri için interaktif kardiyoloji eğitim platformu",
-  generator: "v0.dev",
+  generator: 'v0.dev'
 }
 
 export default function RootLayout({
@@ -22,9 +22,9 @@ export default function RootLayout({
     <html lang="tr" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+
           {children}
           <Toaster />
-          <CookieConsent />
         </ThemeProvider>
       </body>
     </html>

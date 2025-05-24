@@ -1,19 +1,12 @@
-export const dynamic = 'force-dynamic';
-
 import { getUserDetails, requireAuth } from "@/lib/auth"
 import { getUserBadges } from "@/lib/db"
 import { DashboardLayout } from "@/components/dashboard-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Award } from "lucide-react"
-import { redirect } from "next/navigation"
 
 export default async function BadgesPage() {
   const session = await requireAuth()
   const user = await getUserDetails()
-
-  if (!session) {
-    redirect("/login")
-  }
 
   if (!user) {
     return <div>Kullanıcı bilgileri yüklenemedi.</div>

@@ -1,14 +1,22 @@
-// Update the landing page with better error handling
+// Update the landing page with new branding and color scheme
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Activity, ArrowRight, CheckCircle, AlertTriangle, GraduationCap, BookOpen, Award, Users } from "lucide-react"
-
+import { getSession } from "@/lib/auth"
+import { BookOpen, Activity, Award, Users, ArrowRight, CheckCircle, AlertTriangle, GraduationCap } from "lucide-react"
 import { DisclaimerDialog } from "@/components/disclaimer-dialog"
 
 // Sayfayı dinamik olarak işaretle
 export const dynamic = "force-dynamic"
 
 export default async function Home() {
+  let session = null
+
+  try {
+    session = await getSession()
+  } catch (error) {
+    console.error("Session alınırken hata:", error)
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
       <DisclaimerDialog />
@@ -34,12 +42,20 @@ export default async function Home() {
             </Link>
           </nav>
           <div className="flex items-center gap-4">
-            <Button asChild variant="ghost" className="hidden sm:flex">
-              <Link href="/login">Giriş Yap</Link>
-            </Button>
-            <Button asChild>
-              <Link href="/register">Kayıt Ol</Link>
-            </Button>
+            {session ? (
+              <Button asChild>
+                <Link href="/dashboard">Dashboard</Link>
+              </Button>
+            ) : (
+              <>
+                <Button asChild variant="ghost" className="hidden sm:flex">
+                  <Link href="/login">Giriş Yap</Link>
+                </Button>
+                <Button asChild>
+                  <Link href="/register">Kayıt Ol</Link>
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </header>
@@ -53,7 +69,7 @@ export default async function Home() {
                     Tıp Eğitiminde Yeni Nesil Öğrenme
                   </h1>
                   <p className="max-w-[600px] text-gray-500 md:text-xl dark:text-gray-400">
-                    Edulogy bünyesinde sunulan interaktif öğrenme deneyimi ile bilginizi geliştirin. Eğlenceli 
+                    Healision bünyesinde sunulan interaktif öğrenme deneyimi ile bilginizi geliştirin. Eğlenceli
                     quizler, görsel içerikler ve gamification özellikleriyle öğrenmeyi keyifli hale getirin.
                   </p>
                 </div>
@@ -125,7 +141,6 @@ export default async function Home() {
           </div>
         </section>
 
-
         <section id="features" className="w-full py-12 md:py-24 lg:py-32 bg-white dark:bg-gray-950">
           <div className="container px-4 md:px-6 mx-auto">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
@@ -183,7 +198,7 @@ export default async function Home() {
                   <div className="inline-block rounded-lg bg-primary/10 px-3 py-1 text-sm text-primary">Hakkında</div>
                   <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">Tıp Eğitiminde Devrim</h2>
                   <p className="max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
-                    Edulogy, Edulogy bünyesinde tıp öğrencileri ve sağlık profesyonelleri için tasarlanmış, modern
+                    Edulogy, Healision bünyesinde tıp öğrencileri ve sağlık profesyonelleri için tasarlanmış, modern
                     öğrenme teknikleriyle tıp eğitimini daha etkili hale getiren bir platformdur.
                   </p>
                 </div>
@@ -345,13 +360,13 @@ export default async function Home() {
               <span className="text-lg font-bold">Edulogy</span>
             </div>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              © {new Date().getFullYear()} Edulogy. Tüm hakları saklıdır.
+              © {new Date().getFullYear()} Healision. Tüm hakları saklıdır.
             </p>
             <div className="flex gap-4">
-              <Link href="/privacy-policy" className="text-sm text-gray-500 hover:underline dark:text-gray-400">
+              <Link href="#" className="text-sm text-gray-500 hover:underline dark:text-gray-400">
                 Gizlilik Politikası
               </Link>
-              <Link href="/terms-of-service" className="text-sm text-gray-500 hover:underline dark:text-gray-400">
+              <Link href="#" className="text-sm text-gray-500 hover:underline dark:text-gray-400">
                 Kullanım Şartları
               </Link>
             </div>

@@ -6,8 +6,8 @@ export default function NotFound() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background">
       <div className="flex items-center gap-2 mb-6">
-        <Heart className="h-10 w-10 text-blue-600" />
-        <span className="text-2xl font-bold">Edulogy</span>
+        <Heart className="h-10 w-10 text-red-500" />
+        <span className="text-2xl font-bold">CardioEdu</span>
       </div>
       <h1 className="text-4xl font-bold mb-2">404</h1>
       <h2 className="text-xl font-medium mb-6">Sayfa Bulunamadı</h2>

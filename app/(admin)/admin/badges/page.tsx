@@ -43,7 +43,7 @@ export default function AdminBadgesPage() {
     return (
       <AdminLayout>
         <div className="text-center">
-          <p className="text-blue-600">Rozetler yüklenirken bir hata oluştu.</p>
+          <p className="text-red-500">Rozetler yüklenirken bir hata oluştu.</p>
         </div>
       </AdminLayout>
     )

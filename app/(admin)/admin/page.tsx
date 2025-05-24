@@ -1,18 +1,11 @@
-export const dynamic = 'force-dynamic';
-
 import { requireAdmin } from "@/lib/auth"
 import { AdminLayout } from "@/components/admin-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { getAllUsers } from "@/lib/db"
 import { Users, BookOpen, Award, HelpCircle } from "lucide-react"
-import { redirect } from "next/navigation"
 
 export default async function AdminDashboardPage() {
-  const session = await requireAdmin()
-
-  if (!session) {
-    redirect("/login")
-  }
+  await requireAdmin()
 
   const users = await getAllUsers()
 
@@ -28,7 +21,7 @@ export default async function AdminDashboardPage() {
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Admin Dashboard</h1>
-            <p className="text-muted-foreground">Edulogy platformu yönetim paneli</p>
+            <p className="text-muted-foreground">CardioEdu platformu yönetim paneli</p>
           </div>
         </div>
 

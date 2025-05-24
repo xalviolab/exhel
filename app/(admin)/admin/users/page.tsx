@@ -1,5 +1,3 @@
-export const dynamic = 'force-dynamic';
-
 import { requireAdmin } from "@/lib/auth"
 import { getAllUsers } from "@/lib/db"
 import { AdminLayout } from "@/components/admin-layout"
@@ -8,14 +6,9 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { UserRoleForm } from "@/components/admin/user-role-form"
-import { redirect } from "next/navigation"
 
 export default async function AdminUsersPage() {
-  const session = await requireAdmin()
-
-  if (!session) {
-    redirect("/login")
-  }
+  await requireAdmin()
 
   const users = await getAllUsers()
 
