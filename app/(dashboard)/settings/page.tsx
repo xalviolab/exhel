@@ -32,25 +32,58 @@ export default function SettingsPage() {
       try {
         setIsLoadingUser(true)
 
-        // Önce mevcut oturumu kontrol et
-        const { data: sessionData } = await supabase.auth.getSession()
+        // Önce auth kullanıcısını al
+        const { data: authData, error: authError } = await supabase.auth.getUser()
 
-        if (!sessionData.session) {
+        if (authError || !authData.user) {
+          console.error("Auth error:", authError)
           window.location.href = "/login"
           return
         }
 
-        // Kullanıcı bilgilerini getir
-        const { data, error } = await supabase.from("users").select("*").eq("id", sessionData.session.user.id).single()
+        // Kullanıcı tablosundan profil bilgilerini al
+        const { data: userData, error: userError } = await supabase
+          .from("users")
+          .select("*")
+          .eq("id", authData.user.id)
+          .single()
 
-        if (error) {
-          console.error("Error fetching user:", error)
-          return
+        if (userError) {
+          // Kullanıcı tablosunda kayıt yoksa oluştur
+          if (userError.code === "PGRST116") {
+            const { data: newUser, error: createError } = await supabase
+              .from("users")
+              .insert({
+                id: authData.user.id,
+                email: authData.user.email,
+                full_name: authData.user.user_metadata?.full_name || "",
+                avatar_url: authData.user.user_metadata?.avatar_url || "",
+                role: "user",
+                level: 1,
+                xp: 0,
+                streak: 0,
+                created_at: new Date().toISOString(),
+              })
+              .select()
+              .single()
+
+            if (createError) {
+              console.error("Error creating user:", createError)
+              throw createError
+            }
+
+            setUser(newUser)
+            setFullName(newUser.full_name || "")
+            setAvatarUrl(newUser.avatar_url || "")
+          } else {
+            console.error("Error fetching user:", userError)
+            throw userError
+          }
+        } else {
+          setUser(userData)
+          setFullName(userData.full_name || "")
+          setAvatarUrl(userData.avatar_url || "")
         }
-
-        setUser(data)
-        setFullName(data.full_name || "")
-        setAvatarUrl(data.avatar_url || "")
       } catch (error) {
         console.error("Error in fetchUser:", error)
         toast({
@@ -64,11 +97,6 @@ export default function SettingsPage() {
     }
 
     fetchUser()
-
-    // Temizleme fonksiyonu
-    return () => {
-      // Gerekirse abonelikler veya zamanlayıcılar burada temizlenebilir
-    }
   }, [])
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
@@ -121,7 +149,6 @@ export default function SettingsPage() {
     setIsChangingPassword(true)
 
     try {
-      // Şifre değiştirme işlemi için hız sınırı kontrolü
       const { error } = await supabase.auth.updateUser({
         password: newPassword,
       })

@@ -1,121 +1,137 @@
-import Link from "next/link"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft } from "lucide-react"
-
-export const metadata = {
-  title: "Kullanım Şartları - Edulogy",
-  description: "Edulogy platformu kullanım şartları ve koşulları",
-}
+import { ArrowLeft, FileText } from "lucide-react"
+import Link from "next/link"
 
 export default function TermsOfServicePage() {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center">
+    <div className="min-h-screen bg-gradient-to-br from-blue-light/20 to-ivory">
+      <div className="container mx-auto px-4 py-8">
+        <div className="mb-6">
           <Link href="/">
-            <Button variant="ghost" size="sm" className="gap-1">
-              <ArrowLeft className="h-4 w-4" />
-              <span>Ana Sayfa</span>
+            <Button variant="ghost" className="text-navy hover:bg-navy/10">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Ana Sayfaya Dön
             </Button>
           </Link>
         </div>
-      </header>
-      <main className="container py-8 md:py-12">
-        <div className="mx-auto max-w-3xl">
-          <h1 className="text-3xl font-bold tracking-tight mb-6">Kullanım Şartları</h1>
 
-          <div className="prose dark:prose-invert max-w-none">
-            <p className="lead">
-              Bu Kullanım Şartları, Edulogy platformunu kullanımınızı düzenleyen koşulları içerir. Platformumuzu
-              kullanarak bu şartları kabul etmiş sayılırsınız.
-            </p>
+        <Card className="glass-card max-w-4xl mx-auto">
+          <CardHeader className="text-center">
+            <div className="flex justify-center mb-4">
+              <div className="corporate-gradient p-3 rounded-2xl">
+                <FileText className="h-8 w-8 text-white" />
+              </div>
+            </div>
+            <CardTitle className="text-3xl font-bold text-navy">Kullanım Şartları</CardTitle>
+            <p className="text-muted-foreground">Son güncelleme: {new Date().toLocaleDateString("tr-TR")}</p>
+          </CardHeader>
+          <CardContent className="prose prose-lg max-w-none">
+            <div className="space-y-6">
+              <section>
+                <h2 className="text-xl font-semibold text-navy mb-3">1. Kabul ve Onay</h2>
+                <p>
+                  Edulogy platformunu kullanarak, Healision tarafından sunulan bu kullanım şartlarını kabul etmiş
+                  sayılırsınız. Bu şartları kabul etmiyorsanız, platformu kullanmamalısınız.
+                </p>
+              </section>
 
-            <h2>1. Tanımlar</h2>
-            <p>
-              <strong>"Platform"</strong> ifadesi, Edulogy web sitesini, mobil uygulamasını ve ilgili tüm dijital
-              hizmetleri kapsar.
-              <br />
-              <strong>"Kullanıcı"</strong> ifadesi, platformu kullanan herhangi bir kişiyi ifade eder.
-              <br />
-              <strong>"İçerik"</strong> ifadesi, platform üzerinde bulunan tüm metin, görsel, video, ses ve diğer
-              materyalleri kapsar.
-            </p>
+              <section>
+                <h2 className="text-xl font-semibold text-navy mb-3">2. Platform Tanımı</h2>
+                <p>
+                  Edulogy, Healision bünyesinde sunulan, tıp fakültesi öğrencileri için tasarlanmış interaktif eğitim
+                  platformudur. Platform, çevrimiçi dersler, quizler ve eğitim materyalleri sunar.
+                </p>
+              </section>
 
-            <h2>2. Hesap Oluşturma ve Güvenlik</h2>
-            <p>
-              Platform'u kullanmak için bir hesap oluşturmanız gerekebilir. Hesap bilgilerinizin gizliliğini korumak ve
-              hesabınızla gerçekleştirilen tüm etkinliklerden sorumlu olmak sizin sorumluluğunuzdadır.
-            </p>
-            <p>
-              Hesap oluştururken doğru ve güncel bilgiler sağlamakla yükümlüsünüz. 13 yaşından küçükseniz, Platform'u
-              kullanamazsınız.
-            </p>
+              <section>
+                <h2 className="text-xl font-semibold text-navy mb-3">3. Kullanıcı Sorumlulukları</h2>
+                <h3 className="text-lg font-medium text-navy mb-2">3.1 Hesap Güvenliği</h3>
+                <ul className="list-disc pl-6 space-y-1">
+                  <li>Hesap bilgilerinizi güvenli tutmakla yükümlüsünüz</li>
+                  <li>Şifrenizi başkalarıyla paylaşmamalısınız</li>
+                  <li>Hesabınızda gerçekleşen tüm aktivitelerden sorumlusunuz</li>
+                </ul>
 
-            <h2>3. Kullanım Koşulları</h2>
-            <p>Platform'u kullanırken aşağıdaki kurallara uymayı kabul edersiniz:</p>
-            <ul>
-              <li>Platform'u yasa dışı amaçlarla kullanmamak</li>
-              <li>Platform'un güvenliğini tehlikeye atacak faaliyetlerde bulunmamak</li>
-              <li>Diğer kullanıcıların Platform'u kullanmasını engelleyecek davranışlarda bulunmamak</li>
-              <li>Platform üzerinden zararlı yazılım yaymamak</li>
-              <li>İzinsiz reklam veya promosyon materyali dağıtmamak</li>
-            </ul>
+                <h3 className="text-lg font-medium text-navy mb-2 mt-4">3.2 İçerik Kullanımı</h3>
+                <ul className="list-disc pl-6 space-y-1">
+                  <li>Eğitim materyalleri yalnızca kişisel kullanım içindir</li>
+                  <li>İçerikleri izinsiz paylaşmak yasaktır</li>
+                  <li>Ticari amaçlarla kullanım yasaktır</li>
+                </ul>
+              </section>
 
-            <h2>4. İçerik ve Fikri Mülkiyet</h2>
-            <p>
-              Platform üzerindeki tüm içerik, aksi belirtilmedikçe Edulogy'nin veya lisans verenlerin mülkiyetindedir
-              ve telif hakkı, ticari marka ve diğer fikri mülkiyet yasaları tarafından korunmaktadır.
-            </p>
-            <p>
-              Platform'a yüklediğiniz içerikler için, bu içerikleri kullanma, düzenleme, paylaşma ve dağıtma hakkını
-              Edulogy'ye vermiş olursunuz.
-            </p>
+              <section>
+                <h2 className="text-xl font-semibold text-navy mb-3">4. Yasak Davranışlar</h2>
+                <p>Aşağıdaki davranışlar kesinlikle yasaktır:</p>
+                <ul className="list-disc pl-6 space-y-1">
+                  <li>Platform güvenliğini tehdit edici faaliyetler</li>
+                  <li>Başka kullanıcıların hesaplarına yetkisiz erişim</li>
+                  <li>Zararlı yazılım yükleme veya dağıtma</li>
+                  <li>Sahte bilgi paylaşımı</li>
+                  <li>Telif hakkı ihlali</li>
+                </ul>
+              </section>
 
-            <h2>5. Sorumluluk Reddi</h2>
-            <p>
-              Platform "olduğu gibi" ve "mevcut olduğu şekliyle" sunulmaktadır. Edulogy, Platform'un kesintisiz veya
-              hatasız çalışacağını garanti etmez.
-            </p>
-            <p>
-              <strong>Önemli Uyarı:</strong> Platform üzerindeki tıbbi içerikler yalnızca eğitim amaçlıdır ve
-              profesyonel tıbbi tavsiye, teşhis veya tedavi yerine geçmez. Sağlık sorunlarınız için her zaman nitelikli
-              bir sağlık uzmanına başvurunuz.
-            </p>
+              <section>
+                <h2 className="text-xl font-semibold text-navy mb-3">5. Fikri Mülkiyet</h2>
+                <p>
+                  Platform üzerindeki tüm içerikler (dersler, quizler, görseller, metinler) Healision'ın fikri
+                  mülkiyetidir. Bu içeriklerin izinsiz kullanımı yasaktır.
+                </p>
+              </section>
 
-            <h2>6. Sorumluluk Sınırlaması</h2>
-            <p>
-              Edulogy, Platform'un kullanımından kaynaklanan doğrudan, dolaylı, arızi, özel veya sonuç olarak ortaya
-              çıkan zararlardan sorumlu tutulamaz.
-            </p>
+              <section>
+                <h2 className="text-xl font-semibold text-navy mb-3">6. Hizmet Kesintileri</h2>
+                <p>
+                  Healision, teknik bakım, güncelleme veya beklenmeyen durumlar nedeniyle hizmeti geçici olarak durdurma
+                  hakkını saklı tutar.
+                </p>
+              </section>
 
-            <h2>7. Değişiklikler</h2>
-            <p>
-              Edulogy, bu Kullanım Şartları'nı herhangi bir zamanda değiştirme hakkını saklı tutar. Değişiklikler,
-              Platform üzerinde yayınlandıktan sonra geçerli olacaktır.
-            </p>
+              <section>
+                <h2 className="text-xl font-semibold text-navy mb-3">7. Hesap Sonlandırma</h2>
+                <p>
+                  Kullanım şartlarını ihlal eden hesaplar uyarı verilmeksizin sonlandırılabilir. Kullanıcılar
+                  hesaplarını istediği zaman kapatabilir.
+                </p>
+              </section>
 
-            <h2>8. Fesih</h2>
-            <p>
-              Edulogy, kendi takdirine bağlı olarak, herhangi bir zamanda ve herhangi bir nedenle, önceden bildirimde
-              bulunmaksızın hesabınızı askıya alabilir veya sonlandırabilir.
-            </p>
+              <section>
+                <h2 className="text-xl font-semibold text-navy mb-3">8. Sorumluluk Reddi</h2>
+                <p>
+                  Platform eğitim amaçlıdır ve tıbbi tavsiye niteliği taşımaz. Gerçek tıbbi durumlar için mutlaka uzman
+                  hekime başvurun.
+                </p>
+              </section>
 
-            <h2>9. Uygulanacak Hukuk</h2>
-            <p>Bu Kullanım Şartları, Türkiye Cumhuriyeti yasalarına tabidir ve bu yasalara göre yorumlanacaktır.</p>
+              <section>
+                <h2 className="text-xl font-semibold text-navy mb-3">9. Uygulanacak Hukuk</h2>
+                <p>Bu şartlar Türkiye Cumhuriyeti hukukuna tabidir. Uyuşmazlıklar İstanbul mahkemelerinde çözülür.</p>
+              </section>
 
-            <h2>10. İletişim</h2>
-            <p>
-              Bu Kullanım Şartları ile ilgili sorularınız için{" "}
-              <a href="mailto:info@edulogy.com" className="text-primary hover:underline">
-                info@edulogy.com
-              </a>{" "}
-              adresinden bizimle iletişime geçebilirsiniz.
-            </p>
+              <section>
+                <h2 className="text-xl font-semibold text-navy mb-3">10. İletişim</h2>
+                <p>
+                  Kullanım şartları ile ilgili sorularınız için{" "}
+                  <a href="mailto:legal@healision.com" className="text-navy hover:underline">
+                    legal@healision.com
+                  </a>{" "}
+                  adresinden bizimle iletişime geçebilirsiniz.
+                </p>
+              </section>
 
-            <p className="text-sm text-muted-foreground mt-8">Son güncelleme tarihi: 23 Mayıs 2023</p>
-          </div>
-        </div>
-      </main>
+              <section>
+                <h2 className="text-xl font-semibold text-navy mb-3">11. Değişiklikler</h2>
+                <p>
+                  Healision bu kullanım şartlarını istediği zaman değiştirme hakkını saklı tutar. Değişiklikler platform
+                  üzerinden duyurulur.
+                </p>
+              </section>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 }

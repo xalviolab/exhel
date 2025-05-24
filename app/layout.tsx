@@ -1,32 +1,24 @@
 import type React from "react"
 import "./globals.css"
-import { Inter } from "next/font/google"
-import { ThemeProvider } from "@/components/theme-provider"
-import { Toaster } from "@/components/ui/toaster"
-
-
-const inter = Inter({ subsets: ["latin"] })
 
 export const metadata = {
-  title: "CardioEdu - Kardiyoloji Eğitim Platformu",
-  description: "Tıp öğrencileri ve sağlık profesyonelleri için interaktif kardiyoloji eğitim platformu",
-  generator: 'v0.dev'
+  title: "Edulogy - Tıp Eğitimi Platformu | Healision",
+  description:
+    "Healision bünyesinde sunulan, tıp fakültesi öğrencileri için interaktif eğitim platformu. Modern öğrenme deneyimi ile tıp eğitiminde yeni bir dönem.",
+  generator: "v0.dev",
+  keywords: "tıp eğitimi, interaktif öğrenme, tıp fakültesi, Healision, Edulogy",
+  authors: [{ name: "Healision" }],
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1",
 }
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode
-}) {
+}>) {
   return (
-    <html lang="tr" suppressHydrationWarning>
-      <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-
-          {children}
-          <Toaster />
-        </ThemeProvider>
-      </body>
+    <html lang="en">
+      <body>{children}</body>
     </html>
   )
 }

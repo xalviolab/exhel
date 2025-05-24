@@ -1,156 +1,131 @@
-import Link from "next/link"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft } from "lucide-react"
-
-export const metadata = {
-  title: "Gizlilik Politikası - Edulogy",
-  description: "Edulogy platformu gizlilik politikası",
-}
+import { ArrowLeft, Shield } from "lucide-react"
+import Link from "next/link"
 
 export default function PrivacyPolicyPage() {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center">
+    <div className="min-h-screen bg-gradient-to-br from-blue-light/20 to-ivory">
+      <div className="container mx-auto px-4 py-8">
+        <div className="mb-6">
           <Link href="/">
-            <Button variant="ghost" size="sm" className="gap-1">
-              <ArrowLeft className="h-4 w-4" />
-              <span>Ana Sayfa</span>
+            <Button variant="ghost" className="text-navy hover:bg-navy/10">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Ana Sayfaya Dön
             </Button>
           </Link>
         </div>
-      </header>
-      <main className="container py-8 md:py-12">
-        <div className="mx-auto max-w-3xl">
-          <h1 className="text-3xl font-bold tracking-tight mb-6">Gizlilik Politikası</h1>
 
-          <div className="prose dark:prose-invert max-w-none">
-            <p className="lead">
-              Bu Gizlilik Politikası, Edulogy platformunu kullanırken kişisel verilerinizin nasıl toplandığını,
-              kullanıldığını ve korunduğunu açıklar.
-            </p>
+        <Card className="glass-card max-w-4xl mx-auto">
+          <CardHeader className="text-center">
+            <div className="flex justify-center mb-4">
+              <div className="corporate-gradient p-3 rounded-2xl">
+                <Shield className="h-8 w-8 text-white" />
+              </div>
+            </div>
+            <CardTitle className="text-3xl font-bold text-navy">Gizlilik Politikası</CardTitle>
+            <p className="text-muted-foreground">Son güncelleme: {new Date().toLocaleDateString("tr-TR")}</p>
+          </CardHeader>
+          <CardContent className="prose prose-lg max-w-none">
+            <div className="space-y-6">
+              <section>
+                <h2 className="text-xl font-semibold text-navy mb-3">1. Giriş</h2>
+                <p>
+                  Edulogy olarak, Healision bünyesinde sunulan tıp eğitimi platformumuzda kullanıcılarımızın gizliliğini
+                  korumayı taahhüt ediyoruz. Bu gizlilik politikası, kişisel verilerinizin nasıl toplandığını,
+                  kullanıldığını ve korunduğunu açıklamaktadır.
+                </p>
+              </section>
 
-            <h2>1. Toplanan Bilgiler</h2>
-            <p>Edulogy olarak, aşağıdaki kişisel bilgileri toplayabiliriz:</p>
-            <ul>
-              <li>
-                <strong>Hesap Bilgileri:</strong> Ad, soyad, e-posta adresi, şifre gibi kayıt sırasında sağladığınız
-                bilgiler.
-              </li>
-              <li>
-                <strong>Profil Bilgileri:</strong> Profil fotoğrafı, biyografi, eğitim geçmişi gibi isteğe bağlı olarak
-                sağladığınız bilgiler.
-              </li>
-              <li>
-                <strong>Kullanım Verileri:</strong> Platform üzerindeki etkinlikleriniz, tamamladığınız dersler, quiz
-                sonuçları ve etkileşimleriniz.
-              </li>
-              <li>
-                <strong>Cihaz Bilgileri:</strong> IP adresi, tarayıcı türü, cihaz türü, işletim sistemi ve diğer teknik
-                bilgiler.
-              </li>
-              <li>
-                <strong>Çerezler ve Benzer Teknolojiler:</strong> Platform'u kullanımınızı iyileştirmek için çerezler ve
-                benzer teknolojiler kullanıyoruz.
-              </li>
-            </ul>
+              <section>
+                <h2 className="text-xl font-semibold text-navy mb-3">2. Toplanan Bilgiler</h2>
+                <h3 className="text-lg font-medium text-navy mb-2">2.1 Kişisel Bilgiler</h3>
+                <ul className="list-disc pl-6 space-y-1">
+                  <li>Ad ve soyad</li>
+                  <li>E-posta adresi</li>
+                  <li>Eğitim durumu ve okul bilgileri</li>
+                  <li>Profil fotoğrafı (isteğe bağlı)</li>
+                </ul>
 
-            <h2>2. Bilgilerin Kullanımı</h2>
-            <p>Topladığımız bilgileri aşağıdaki amaçlarla kullanıyoruz:</p>
-            <ul>
-              <li>Platform'u sağlamak, yönetmek ve geliştirmek</li>
-              <li>Hesabınızı oluşturmak ve yönetmek</li>
-              <li>Kişiselleştirilmiş öğrenme deneyimi sunmak</li>
-              <li>İlerlemenizi takip etmek ve başarılarınızı kaydetmek</li>
-              <li>Teknik sorunları gidermek ve güvenliği sağlamak</li>
-              <li>Sizinle iletişim kurmak ve güncellemeler sağlamak</li>
-              <li>Yasal yükümlülüklerimizi yerine getirmek</li>
-            </ul>
+                <h3 className="text-lg font-medium text-navy mb-2 mt-4">2.2 Kullanım Verileri</h3>
+                <ul className="list-disc pl-6 space-y-1">
+                  <li>Ders tamamlama durumu</li>
+                  <li>Quiz sonuçları ve performans verileri</li>
+                  <li>Platform kullanım istatistikleri</li>
+                  <li>Giriş ve çıkış zamanları</li>
+                </ul>
+              </section>
 
-            <h2>3. Bilgilerin Paylaşımı</h2>
-            <p>Kişisel bilgilerinizi aşağıdaki durumlar dışında üçüncü taraflarla paylaşmıyoruz:</p>
-            <ul>
-              <li>
-                <strong>Hizmet Sağlayıcılar:</strong> Platform'u işletmemize yardımcı olan güvenilir üçüncü taraf hizmet
-                sağlayıcılarla.
-              </li>
-              <li>
-                <strong>Yasal Gereklilikler:</strong> Yasal bir yükümlülüğe uymak, Edulogy'nin haklarını veya
-                güvenliğini korumak, yasadışı faaliyetleri önlemek veya soruşturmak için gerekli olduğunda.
-              </li>
-              <li>
-                <strong>İş Transferleri:</strong> Bir birleşme, satın alma veya varlık satışı durumunda, kişisel
-                bilgileriniz aktarılan varlıklar arasında olabilir.
-              </li>
-              <li>
-                <strong>İzninizle:</strong> Açık izninizi aldığımız diğer durumlarda.
-              </li>
-            </ul>
+              <section>
+                <h2 className="text-xl font-semibold text-navy mb-3">3. Bilgilerin Kullanımı</h2>
+                <p>Toplanan bilgiler aşağıdaki amaçlarla kullanılır:</p>
+                <ul className="list-disc pl-6 space-y-1">
+                  <li>Eğitim hizmetlerinin sunulması</li>
+                  <li>Kullanıcı deneyiminin kişiselleştirilmesi</li>
+                  <li>İlerleme takibi ve raporlama</li>
+                  <li>Teknik destek sağlanması</li>
+                  <li>Platform güvenliğinin sağlanması</li>
+                </ul>
+              </section>
 
-            <h2>4. Veri Güvenliği</h2>
-            <p>
-              Kişisel bilgilerinizi korumak için uygun teknik ve organizasyonel önlemler alıyoruz. Ancak, internet
-              üzerinden hiçbir veri iletiminin veya elektronik depolamanın %100 güvenli olmadığını unutmayın.
-            </p>
+              <section>
+                <h2 className="text-xl font-semibold text-navy mb-3">4. Bilgi Paylaşımı</h2>
+                <p>
+                  Kişisel bilgileriniz, yasal zorunluluklar dışında üçüncü taraflarla paylaşılmaz. Eğitim kurumunuzla
+                  ilerleme raporları paylaşılabilir.
+                </p>
+              </section>
 
-            <h2>5. Veri Saklama</h2>
-            <p>
-              Kişisel bilgilerinizi, hesabınız aktif olduğu sürece veya hizmetlerimizi sağlamak için gerekli olduğu
-              sürece saklarız. Hesabınızı sildiğinizde, bilgilerinizi yasal yükümlülüklerimizi yerine getirmek,
-              anlaşmazlıkları çözmek ve politikalarımızı uygulamak için gerekli olduğu sürece saklama hakkımızı saklı
-              tutarız.
-            </p>
+              <section>
+                <h2 className="text-xl font-semibold text-navy mb-3">5. Çerezler</h2>
+                <p>
+                  Platformumuz, kullanıcı deneyimini geliştirmek için çerezler kullanır. Çerez tercihlerinizi tarayıcı
+                  ayarlarınızdan yönetebilirsiniz.
+                </p>
+              </section>
 
-            <h2>6. Çocukların Gizliliği</h2>
-            <p>
-              Platform, 13 yaşın altındaki çocuklar için tasarlanmamıştır. 13 yaşın altındaki bir çocuktan kişisel bilgi
-              topladığımızı fark edersek, bu bilgileri en kısa sürede silmek için adımlar atarız.
-            </p>
+              <section>
+                <h2 className="text-xl font-semibold text-navy mb-3">6. Veri Güvenliği</h2>
+                <p>
+                  Verileriniz endüstri standardı güvenlik önlemleriyle korunur. SSL şifreleme, güvenli sunucular ve
+                  düzenli güvenlik denetimleri uygulanır.
+                </p>
+              </section>
 
-            <h2>7. Çerezler ve Benzer Teknolojiler</h2>
-            <p>
-              Platform'da çerezler ve benzer teknolojiler kullanıyoruz. Bu teknolojiler, Platform'u nasıl kullandığınızı
-              anlamamıza ve deneyiminizi geliştirmemize yardımcı olur. Çoğu web tarayıcısı, çerezleri reddetmenize veya
-              çerez alındığında sizi uyarmanıza olanak tanır, ancak bazı Platform özellikleri çerezler olmadan düzgün
-              çalışmayabilir.
-            </p>
+              <section>
+                <h2 className="text-xl font-semibold text-navy mb-3">7. Kullanıcı Hakları</h2>
+                <p>KVKK kapsamında aşağıdaki haklara sahipsiniz:</p>
+                <ul className="list-disc pl-6 space-y-1">
+                  <li>Kişisel verilerinizin işlenip işlenmediğini öğrenme</li>
+                  <li>Kişisel verilerinize erişim talep etme</li>
+                  <li>Yanlış verilerin düzeltilmesini isteme</li>
+                  <li>Verilerin silinmesini talep etme</li>
+                  <li>Veri işlemeye itiraz etme</li>
+                </ul>
+              </section>
 
-            <h2>8. Haklarınız</h2>
-            <p>Kişisel verilerinizle ilgili olarak aşağıdaki haklara sahipsiniz:</p>
-            <ul>
-              <li>Kişisel verilerinize erişim talep etme</li>
-              <li>Yanlış veya eksik bilgilerin düzeltilmesini isteme</li>
-              <li>Belirli koşullar altında kişisel verilerinizin silinmesini isteme</li>
-              <li>Kişisel verilerinizin işlenmesine itiraz etme</li>
-              <li>Verilerinizin taşınabilirliğini talep etme</li>
-            </ul>
-            <p>
-              Bu haklarınızı kullanmak için{" "}
-              <a href="mailto:privacy@edulogy.com" className="text-primary hover:underline">
-                privacy@edulogy.com
-              </a>{" "}
-              adresinden bizimle iletişime geçebilirsiniz.
-            </p>
+              <section>
+                <h2 className="text-xl font-semibold text-navy mb-3">8. İletişim</h2>
+                <p>
+                  Gizlilik politikası ile ilgili sorularınız için{" "}
+                  <a href="mailto:privacy@healision.com" className="text-navy hover:underline">
+                    privacy@healision.com
+                  </a>{" "}
+                  adresinden bizimle iletişime geçebilirsiniz.
+                </p>
+              </section>
 
-            <h2>9. Değişiklikler</h2>
-            <p>
-              Bu Gizlilik Politikası'nı zaman zaman güncelleyebiliriz. Önemli değişiklikler olması durumunda, Platform
-              üzerinden veya e-posta yoluyla bildirimde bulunacağız.
-            </p>
-
-            <h2>10. İletişim</h2>
-            <p>
-              Bu Gizlilik Politikası ile ilgili sorularınız veya endişeleriniz varsa,{" "}
-              <a href="mailto:privacy@edulogy.com" className="text-primary hover:underline">
-                privacy@edulogy.com
-              </a>{" "}
-              adresinden bizimle iletişime geçebilirsiniz.
-            </p>
-
-            <p className="text-sm text-muted-foreground mt-8">Son güncelleme tarihi: 23 Mayıs 2023</p>
-          </div>
-        </div>
-      </main>
+              <section>
+                <h2 className="text-xl font-semibold text-navy mb-3">9. Değişiklikler</h2>
+                <p>
+                  Bu gizlilik politikası gerektiğinde güncellenebilir. Önemli değişiklikler kullanıcılara e-posta
+                  yoluyla bildirilir.
+                </p>
+              </section>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 }

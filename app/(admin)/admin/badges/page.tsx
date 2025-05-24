@@ -8,8 +8,7 @@ import { Award, Plus } from "lucide-react"
 import { BadgeForm } from "@/components/admin/badge-form"
 import { createClient } from "@/lib/supabase/client"
 
-// Sayfanın dinamik olarak oluşturulmasını zorluyoruz
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic"
 
 export default function AdminBadgesPage() {
   const [badges, setBadges] = useState<any[]>([])
@@ -20,10 +19,7 @@ export default function AdminBadgesPage() {
     const fetchBadges = async () => {
       try {
         const supabase = createClient()
-        const { data, error } = await supabase
-          .from("badges")
-          .select("*")
-          .order("requirement_type", { ascending: true })
+        const { data, error } = await supabase.from("badges").select("*").order("requirement_type", { ascending: true })
 
         if (error) throw error
         setBadges(data || [])
@@ -38,8 +34,20 @@ export default function AdminBadgesPage() {
     fetchBadges()
   }, [])
 
+  if (loading) {
+    return (
+      <AdminLayout>
+        <div className="flex items-center justify-center h-[60vh]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+            <p className="mt-4 text-muted-foreground">Yükleniyor...</p>
+          </div>
+        </div>
+      </AdminLayout>
+    )
+  }
+
   if (error) {
-    console.error("Error fetching badges:", error)
     return (
       <AdminLayout>
         <div className="text-center">
@@ -104,15 +112,28 @@ export default function AdminBadgesPage() {
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
                   {badgesByType[type].map((badge: any) => (
                     <div key={badge.id} className="flex flex-col items-center text-center">
-                      <div className="flex h-20 w-20 items-center justify-center rounded-full bg-muted mb-3">
+                      <div className="badge-container h-20 w-20 mb-3">
                         {badge.image_url ? (
-                          <img
-                            src={badge.image_url || "/placeholder.svg"}
-                            alt={badge.name}
-                            className="h-16 w-16 rounded-full"
-                          />
+                          badge.image_url.endsWith(".svg") ? (
+                            <object
+                              data={badge.image_url}
+                              type="image/svg+xml"
+                              className="badge-svg"
+                              aria-label={badge.name}
+                            >
+                              <img
+                                src={badge.image_url || "/placeholder.svg"}
+                                alt={badge.name}
+                                className="badge-image"
+                              />
+                            </object>
+                          ) : (
+                            <img src={badge.image_url || "/placeholder.svg"} alt={badge.name} className="badge-image" />
+                          )
                         ) : (
-                          <Award className="h-10 w-10 text-primary" />
+                          <div className="flex items-center justify-center h-full w-full bg-muted rounded-full">
+                            <Award className="h-10 w-10 text-primary" />
+                          </div>
                         )}
                       </div>
                       <h4 className="font-medium">{badge.name}</h4>
@@ -129,15 +150,17 @@ export default function AdminBadgesPage() {
                               ? "XP"
                               : "seviye"}
                       </p>
-                      <BadgeForm badgeId={badge.id} defaultValues={badge} />
+                      <div className="mt-2">
+                        <BadgeForm badgeId={badge.id} defaultValues={badge} />
+                      </div>
                     </div>
                   ))}
                   <div className="flex flex-col items-center justify-center">
-                    <Button variant="outline" className="h-20 w-20 rounded-full" asChild>
-                      <BadgeForm type={type}>
+                    <BadgeForm type={type}>
+                      <Button variant="outline" className="h-20 w-20 rounded-full">
                         <Plus className="h-6 w-6" />
-                      </BadgeForm>
-                    </Button>
+                      </Button>
+                    </BadgeForm>
                     <p className="text-sm font-medium mt-3">Yeni Rozet</p>
                   </div>
                 </div>
