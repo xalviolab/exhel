@@ -45,9 +45,7 @@ export async function requireAuth() {
   const session = await getSession()
 
   if (!session) {
-    // Oturum yoksa login sayfasına yönlendir
-    redirect("/login");
-    return null;
+    redirect("/login")
   }
 
   // Kullanıcı oturum açtığında durumunu güncelle
