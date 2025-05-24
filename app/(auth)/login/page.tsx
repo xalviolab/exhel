@@ -3,8 +3,16 @@
 import type React from "react"
 
 import { useState, useEffect } from "react"
-import { createClient } from "@/utils/supabase/client"
+import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
+
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Checkbox } from "@/components/ui/checkbox"
+import Link from "next/link"
 
 const LoginPage = () => {
   const [email, setEmail] = useState("")
@@ -12,6 +20,7 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
+  const [rememberMe, setRememberMe] = useState(false)
 
   useEffect(() => {
     const checkSession = async () => {
@@ -45,8 +54,9 @@ const LoginPage = () => {
       }
 
       if (data.session) {
-        // Başarılı giriş - sayfayı yenile ve dashboard'a yönlendir
-        window.location.href = "/dashboard"
+        // Başarılı giriş - dashboard'a yönlendir
+        router.push("/dashboard")
+        router.refresh()
       }
     } catch (error: any) {
       setError(error.message || "Giriş yapılırken bir hata oluştu.")
@@ -56,56 +66,64 @@ const LoginPage = () => {
   }
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Giriş Yap</h2>
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-            <strong className="font-bold">Hata!</strong>
-            <span className="block sm:inline">{error}</span>
-          </div>
-        )}
-        <form onSubmit={handleLogin}>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-              E-posta
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="email"
-              type="email"
-              placeholder="E-posta adresiniz"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <div className="mb-6">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-              Şifre
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-              id="password"
-              type="password"
-              placeholder="Şifreniz"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <div className="flex items-center justify-between">
-            <button
-              className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
-              type="submit"
-              disabled={loading}
-            >
+    <div className="w-full flex justify-center items-center">
+      <Card className="w-[350px]">
+        <CardHeader>
+          <CardTitle>Giriş Yap</CardTitle>
+          <CardDescription>Devam etmek için e-posta ve şifrenizi girin.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {error && (
+            <Alert variant="destructive">
+              {/* <AlertTitle>Error</AlertTitle> */}
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div className="grid w-full gap-2">
+              <Label htmlFor="email">E-posta</Label>
+              <Input
+                id="email"
+                placeholder="E-posta adresinizi girin"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div className="grid w-full gap-2">
+              <Label htmlFor="password">Şifre</Label>
+              <Input
+                id="password"
+                placeholder="Şifrenizi girin"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            <div className="flex items-center space-x-2">
+              <Checkbox id="terms" checked={rememberMe} onCheckedChange={(checked) => setRememberMe(!!checked)} />
+              <div className="grid gap-1.5 leading-none">
+                <Label htmlFor="terms">Beni hatırla</Label>
+              </div>
+            </div>
+            <Button disabled={loading} type="submit">
               {loading ? "Giriş Yapılıyor..." : "Giriş Yap"}
-            </button>
-            <a className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="#">
-              Şifremi Unuttum?
-            </a>
-          </div>
-        </form>
-      </div>
+            </Button>
+          </form>
+        </CardContent>
+        <CardFooter className="flex flex-col gap-2">
+          <Link href="/(auth)/register">
+            <Button variant="outline" className="w-full">
+              Hesabınız yok mu? Kayıt Ol
+            </Button>
+          </Link>
+          <Link href="/(auth)/forgot-password">
+            <Button variant="secondary" className="w-full">
+              Şifremi Unuttum
+            </Button>
+          </Link>
+        </CardFooter>
+      </Card>
     </div>
   )
 }
