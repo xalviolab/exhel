@@ -2,25 +2,31 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { createClient } from "@/utils/supabase/client"
 import { useRouter } from "next/navigation"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Heart } from "lucide-react"
-import { createClient } from "@/lib/supabase/client"
 
-export default function LoginPage() {
-  const router = useRouter()
+const LoginPage = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [rememberMe, setRememberMe] = useState(false)
+  const router = useRouter()
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const supabase = createClient()
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
+
+      if (session) {
+        router.push("/dashboard")
+      }
+    }
+
+    checkSession()
+  }, [router])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -29,7 +35,7 @@ export default function LoginPage() {
 
     try {
       const supabase = createClient()
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
@@ -37,14 +43,10 @@ export default function LoginPage() {
       if (error) {
         throw error
       }
-      
-      // Oturumun oluşturulduğunu doğrulayın
-      const { data: { session: newSession } } = await supabase.auth.getSession()
-      if (newSession) {
-        router.push('/dashboard')
-      } else {
-        // Oturum oluşturulmadıysa hata gösterin
-        setError("Oturum oluşturulamadı, lütfen tekrar deneyin.")
+
+      if (data.session) {
+        // Başarılı giriş - sayfayı yenile ve dashboard'a yönlendir
+        window.location.href = "/dashboard"
       }
     } catch (error: any) {
       setError(error.message || "Giriş yapılırken bir hata oluştu.")
@@ -54,83 +56,58 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 dark:bg-gray-900">
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1 text-center">
-          <div className="flex justify-center mb-2">
-            <Heart className="h-10 w-10 text-blue-600" />
+    <div className="flex justify-center items-center h-screen bg-gray-100">
+      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-md">
+        <h2 className="text-2xl font-bold mb-6 text-center">Giriş Yap</h2>
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <strong className="font-bold">Hata!</strong>
+            <span className="block sm:inline">{error}</span>
           </div>
-          <CardTitle className="text-2xl font-bold">Edulogy</CardTitle>
-          <CardDescription>Hesabınıza giriş yapın</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {error && (
-            <Alert variant="destructive" className="mb-4">
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">E-posta</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="ornek@mail.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password">Şifre</Label>
-                <Link href="/forgot-password" className="text-sm text-blue-600 hover:underline">
-                  Şifremi Unuttum
-                </Link>
-              </div>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="remember"
-                checked={rememberMe}
-                onCheckedChange={(checked) => setRememberMe(checked === true)}
-              />
-              <Label htmlFor="remember" className="text-sm font-normal">
-                Beni hatırla
-              </Label>
-            </div>
-            <Button type="submit" className="w-full" disabled={loading}>
+        )}
+        <form onSubmit={handleLogin}>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+              E-posta
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="email"
+              type="email"
+              placeholder="E-posta adresiniz"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div className="mb-6">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+              Şifre
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+              id="password"
+              type="password"
+              placeholder="Şifreniz"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <div className="flex items-center justify-between">
+            <button
+              className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+              type="submit"
+              disabled={loading}
+            >
               {loading ? "Giriş Yapılıyor..." : "Giriş Yap"}
-            </Button>
-          </form>
-        </CardContent>
-        <CardFooter className="flex flex-col">
-          <div className="text-center text-sm">
-            Hesabınız yok mu?{" "}
-            <Link href="/register" className="text-sm text-blue-600 hover:underline">
-              Kayıt Ol
-            </Link>
+            </button>
+            <a className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="#">
+              Şifremi Unuttum?
+            </a>
           </div>
-          <div className="mt-4 text-center text-xs text-muted-foreground">
-            Giriş yaparak{" "}
-            <Link href="/terms-of-service" className="text-primary hover:underline" target="_blank">
-              Kullanım Şartları
-            </Link>{" "}
-            ve{" "}
-            <Link href="/privacy-policy" className="text-primary hover:underline" target="_blank">
-              Gizlilik Politikası
-            </Link>
-            'nı kabul etmiş olursunuz.
-          </div>
-        </CardFooter>
-      </Card>
+        </form>
+      </div>
     </div>
   )
 }
+
+export default LoginPage
