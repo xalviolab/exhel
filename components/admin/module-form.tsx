@@ -19,7 +19,6 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 import { useToast } from "@/components/ui/use-toast"
-import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 import { Plus, Edit } from "lucide-react"
 import { v4 as uuidv4 } from "uuid"
@@ -68,8 +67,7 @@ export function ModuleForm({ moduleId, defaultValues, children }: ModuleFormProp
     setIsLoading(true)
 
     try {
-      const supabase = createClient()
-
+      // Modül verilerini hazırla
       const moduleData = {
         title: title.trim(),
         description: description.trim(),
@@ -80,31 +78,33 @@ export function ModuleForm({ moduleId, defaultValues, children }: ModuleFormProp
         order_index: orderIndex,
       }
 
-      if (moduleId) {
-        // Güncelleme
-        const { error } = await supabase.from("modules").update(moduleData).eq("id", moduleId)
-
-        if (error) throw error
-
-        toast({
-          title: "Modül güncellendi",
-          description: "Modül başarıyla güncellendi.",
-        })
-      } else {
-        // Yeni oluşturma
-        const newModuleId = uuidv4()
-        const { error } = await supabase.from("modules").insert({
-          id: newModuleId,
-          ...moduleData,
-        })
-
-        if (error) throw error
-
-        toast({
-          title: "Modül oluşturuldu",
-          description: "Yeni modül başarıyla oluşturuldu.",
-        })
+      // Yeni modül oluşturma durumunda ID ekle
+      if (!moduleId) {
+        moduleData.id = uuidv4()
       }
+
+      // Server-side API'yi kullan
+      const response = await fetch('/api/modules', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          moduleData,
+          moduleId,
+        }),
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Bir hata oluştu')
+      }
+
+      toast({
+        title: moduleId ? "Modül güncellendi" : "Modül oluşturuldu",
+        description: result.message,
+      })
 
       setOpen(false)
 
@@ -242,4 +242,3 @@ export function ModuleForm({ moduleId, defaultValues, children }: ModuleFormProp
     </Dialog>
   )
 }
- 
