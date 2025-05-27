@@ -154,7 +154,7 @@ export default function HomePage() {
               <Badge className="mb-4 bg-navy/10 text-navy border-navy/20">Healision Güvencesi</Badge>
               <h2 className="text-4xl font-bold text-navy mb-6">Güvenilir Eğitim Partneri</h2>
               <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
-                Healision'ın 10 yıllık deneyimi ile geliştirilen Edulogy, tıp fakültesi öğrencilerinin ihtiyaçlarını
+                Healision tarafından geliştirilen Edulogy, tıp fakültesi öğrencilerinin ihtiyaçlarını
                 anlayarak tasarlanmış kapsamlı bir eğitim platformudur.
               </p>
               <div className="space-y-4">
@@ -179,10 +179,6 @@ export default function HomePage() {
                     <GraduationCap className="h-12 w-12 text-white" />
                   </div>
                   <h3 className="text-2xl font-bold text-navy mb-4">Hemen Başlayın</h3>
-                  <p className="text-muted-foreground mb-6">7 gün ücretsiz deneme ile tüm özellikleri keşfedin</p>
-                  <Link href="/register">
-                    <Button className="corporate-button w-full">Ücretsiz Deneme Başlat</Button>
-                  </Link>
                 </div>
               </div>
             </div>
@@ -230,7 +226,7 @@ export default function HomePage() {
               <h4 className="font-semibold mb-4">Destek</h4>
               <ul className="space-y-2 text-blue-light">
                 <li>
-                  <a href="mailto:support@healision.com" className="hover:text-white transition-colors">
+                  <a href="mailto:contact@edu.healision.com" className="hover:text-white transition-colors">
                     Destek
                   </a>
                 </li>
@@ -249,14 +245,14 @@ export default function HomePage() {
             <div>
               <h4 className="font-semibold mb-4">İletişim</h4>
               <ul className="space-y-2 text-blue-light">
-                <li>info@healision.com</li>
-                <li>+90 (212) 123 45 67</li>
-                <li>İstanbul, Türkiye</li>
+                <li>contact@edu.healision.com</li>
+                <li></li>
+                <li>Türkiye</li>
               </ul>
             </div>
           </div>
           <div className="border-t border-navy-light mt-8 pt-8 text-center text-blue-light">
-            <p>&copy; 2024 Healision. Tüm hakları saklıdır.</p>
+            <p>&copy; 2025 Edulogy. Tüm hakları saklıdır.</p>
           </div>
         </div>
       </footer>
